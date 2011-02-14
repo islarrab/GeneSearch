@@ -1,11 +1,11 @@
 ﻿<html>
 
    <head>
-      <link rel="stylesheet" href="style/stylesheet.css" />
+      <link rel="stylesheet" href="stylesheet.css" />
       <style type="text/css">
       </style>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-      <script language="Javascript" type="text/javascript" src="javascript/javascript.js">
+      <script language="Javascript" type="text/javascript" src="javascript.js">
       </script>
       <title>Search</title>
    </head>

@@ -37,4 +37,8 @@
       <url-pattern>/Search</url-pattern>
 </servlet-mapping>
 
+<welcome-file-list>
+        <welcome-file>search.jsp</welcome-file>
+</welcome-file-list>
+
 </web-app>
