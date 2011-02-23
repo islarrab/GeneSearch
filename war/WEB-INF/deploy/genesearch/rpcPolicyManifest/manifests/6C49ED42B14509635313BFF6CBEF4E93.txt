@@ -1,0 +1,2 @@
+serviceClass: biomatec.client.GeneSearchService
+path: B0ACD313EF5C04E77C9805D2CE6AB9E1.gwt.rpc
