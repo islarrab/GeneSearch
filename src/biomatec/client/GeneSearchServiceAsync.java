@@ -13,7 +13,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface GeneSearchServiceAsync {
 	void geneSearch(String input, AsyncCallback<ArrayList<Gene>> callback)
 			throws IllegalArgumentException;
-	void geneDetailSearch(String input, AsyncCallback<ArrayList<Dataset>> callback)
+	void geneDetailSearch(int unifeatureKey, AsyncCallback<ArrayList<Dataset>> callback)
 		throws IllegalArgumentException;
-
 }

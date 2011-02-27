@@ -27,23 +27,19 @@ GeneSearchService {
 	private final String DB_USERNAME = "numberone";
 	private final String DB_PASSWORD = "theone";
 
-	private boolean initialized = false;
 	private Statement statement = null;
 	private Connection connection = null;
 
 	public void init() {
-//		if (!this.initialized) {
-			try {
-				Class.forName(DRIVER).newInstance();
-				connection = DriverManager.getConnection( URL+DB, DB_USERNAME, DB_PASSWORD);
-				statement = connection.createStatement();
-				this.initialized = true;
-			}
-			catch ( Exception e ) { 
-				e.printStackTrace(); 
-				connection = null;
-			}
-//		}
+		try {
+			Class.forName(DRIVER).newInstance();
+			connection = DriverManager.getConnection( URL+DB, DB_USERNAME, DB_PASSWORD);
+			statement = connection.createStatement();
+		}
+		catch ( Exception e ) { 
+			e.printStackTrace(); 
+			connection = null;
+		}
 	}   
 
 	public ArrayList<Gene> geneSearch(String input) throws IllegalArgumentException {
@@ -68,6 +64,7 @@ GeneSearchService {
 					results.add(gene);
 
 				}
+				connection.close();
 			}
 			catch(Exception e){
 				System.err.println("ERROR: Problems with the database" );
@@ -80,10 +77,34 @@ GeneSearchService {
 	}
 
 	@Override
-	public ArrayList<Dataset> geneDetailSearch(String gene)
-			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<Dataset> geneDetailSearch(int unifeatureKey)
+	throws IllegalArgumentException {
+		init();
+		ArrayList<Dataset> results = new ArrayList<Dataset>();
+		try{
+			String query = 
+				"SELECT DATA_SET_KEY, NAME, DESCRIPTION " +
+				"FROM DATA_SET " +
+				"WHERE DATA_SET_KEY IN " +
+				"(SELECT DISTINCT(DATA_SET_KEY) " +
+				"FROM FEATURE " +
+				"WHERE UNIFEATURE_KEY BETWEEN " + unifeatureKey + " AND " + (unifeatureKey+2) + ")";
+			ResultSet rs = statement.executeQuery(query);	
+			while(rs.next()){
+				Dataset dataset = new Dataset();
+				dataset.setDatasetkey(rs.getInt(1));
+				dataset.setName(rs.getString(2));
+				dataset.setDescription(rs.getString(3));
+				results.add(dataset);
+				System.out.println(rs.getInt(1) + " " + rs.getString(2));
+			}
+			connection.close();
+		}
+		catch(Exception e){
+			System.err.println("ERROR: Problems with the database" );
+			e.printStackTrace();	
+		}
+		return results;
 	}
-	
+
 }

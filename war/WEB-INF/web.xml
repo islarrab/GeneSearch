@@ -16,6 +16,16 @@
     <url-pattern>/genesearch/search</url-pattern>
   </servlet-mapping>
   
+	<servlet>
+		<servlet-name>SearchSuggestionServiceImpl</servlet-name>
+		<servlet-class>biomatec.server.SearchSuggestionServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>SearchSuggestionServiceImpl</servlet-name>
+		<url-pattern>/GWT/suggest</url-pattern>
+	</servlet-mapping> 
+
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>GeneSearch.html</welcome-file>

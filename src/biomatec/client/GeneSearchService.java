@@ -14,6 +14,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("search")
 public interface GeneSearchService extends RemoteService {
 	ArrayList<Gene> geneSearch(String gene) throws IllegalArgumentException;
-	ArrayList<Dataset> geneDetailSearch(String gene) throws IllegalArgumentException;
+	ArrayList<Dataset> geneDetailSearch(int unifeatureKey) throws IllegalArgumentException;
 }
 
