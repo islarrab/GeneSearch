@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Gene;
+import biomatec.javaBeans.Int;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -13,6 +14,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface GeneSearchServiceAsync {
 	void geneSearch(String input, AsyncCallback<ArrayList<Gene>> callback)
 			throws IllegalArgumentException;
-	void geneDetailSearch(int unifeatureKey, AsyncCallback<ArrayList<Dataset>> callback)
+	void geneDetailSearch(ArrayList<Int> input, AsyncCallback<ArrayList<Dataset>> callback)
 		throws IllegalArgumentException;
 }

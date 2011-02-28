@@ -28,15 +28,28 @@ h1 {
 .resultsTable-headerRow {
 	font-weight: bold;
 	text-align: center;
-	background-color: #DDDDDD;
+	background-color: #88C;
 }
 
 .resultsTable-dataRow {
 	cursor: pointer;
 }
 
+.resultsTable-dataRow-selected {
+	cursor: pointer;
+	background-color: #BFB
+}
+
 .resultsTable-dataRow:hover {
-	background-color: #BBBBFF;
+	background-color: #BBF;
+}
+
+.resultsTable-dataRow-selected:hover {
+	background-color: #9F9
+}
+
+.resultsTable-dataRow:active {
+	background-color: #5;
 }
 
 /** Most GWT widgets already have a style name defined */
@@ -56,3 +69,7 @@ h1 {
 #closeButton {
 	margin: 15px 6px 6px;
 }
+
+#yield {
+	margin-left: auto;
+	margin-right: auto;

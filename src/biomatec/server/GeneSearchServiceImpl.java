@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import biomatec.client.GeneSearchService;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Gene;
+import biomatec.javaBeans.Int;
 //import biomatec.shared.FieldVerifier;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -42,6 +43,7 @@ GeneSearchService {
 		}
 	}   
 
+	@Override
 	public ArrayList<Gene> geneSearch(String input) throws IllegalArgumentException {
 		if (!input.equals("")){
 			init();
@@ -77,7 +79,7 @@ GeneSearchService {
 	}
 
 	@Override
-	public ArrayList<Dataset> geneDetailSearch(int unifeatureKey)
+	public ArrayList<Dataset> geneDetailSearch(ArrayList<Int> input)
 	throws IllegalArgumentException {
 		init();
 		ArrayList<Dataset> results = new ArrayList<Dataset>();
@@ -88,7 +90,12 @@ GeneSearchService {
 				"WHERE DATA_SET_KEY IN " +
 				"(SELECT DISTINCT(DATA_SET_KEY) " +
 				"FROM FEATURE " +
-				"WHERE UNIFEATURE_KEY BETWEEN " + unifeatureKey + " AND " + (unifeatureKey+2) + ")";
+				"WHERE UNIFEATURE_KEY IN (" + input.get(0).getInt();
+			for(int i = 1; i < input.size(); i++){
+				query += ", " + input.get(i).getInt();
+			}
+			query += "));";
+			
 			ResultSet rs = statement.executeQuery(query);	
 			while(rs.next()){
 				Dataset dataset = new Dataset();

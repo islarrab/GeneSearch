@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Gene;
+import biomatec.javaBeans.Int;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -15,6 +16,7 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -50,8 +52,10 @@ public class GeneSearch implements EntryPoint {
 	private SuggestBox searchSuggestBox;
 	private ListBox searchListBox = new ListBox();
 	private Button searchButton = new Button("Search");
+	private Button submitSelectionButton = new Button("Submit Selection");
 	private Label errorLabel = new Label();
 
+	private ArrayList<Int> selectedGenes = new ArrayList<Int>();
 	/**
 	 * This is the entry point method.
 	 */
@@ -60,34 +64,45 @@ public class GeneSearch implements EntryPoint {
 		genesTable.setText(0, 0, "SYMBOL");
 		genesTable.setText(0, 1, "ENTREZ ID");
 		genesTable.setText(0, 2, "ALIASES");
-		genesTable.setText(0, 3, "ORGANISM");
-		genesTable.setText(0, 4, "ANNOTATION");
 		genesTable.setStyleName("resultsTable");
 		genesTable.getRowFormatter().setStyleName(0, "resultsTable-headerRow");
-		
+
 		// Table headers for the datasets table
 		datasetsTable.setText(0, 0, "DATA SET KEY");
 		datasetsTable.setText(0, 1, "NAME");
 		datasetsTable.setText(0, 2, "DESCRIPTION");
 		datasetsTable.setStyleName("resultsTable");
 		datasetsTable.getRowFormatter().setStyleName(0, "resultsTable-headerRow");
-		
+
 		// Assemble the search ListBox
 		searchListBox.addItem("Gene");
-		
+
 		// Assemble the search suggest box
 		GeneSuggestOracle oracle = new GeneSuggestOracle();
 		searchSuggestBox = new SuggestBox(oracle);
 
 		// Assemble the search panel
-		searchPanel.add(searchSuggestBox);
+		searchPanel.setVerticalAlignment(HasAlignment.ALIGN_MIDDLE);
+		searchPanel.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
+		//searchPanel.add(searchSuggestBox);
+		searchPanel.add(searchTextBox);
 		searchPanel.add(searchListBox);
 		searchPanel.add(searchButton);
-		
+		searchTextBox.setWidth("300px");
+		searchTextBox.setHeight("23px");
+		searchListBox.setHeight("30px");
+		searchButton.setHeight("30px");
+
 		// Assemble the reultsTableContainer
+		resultsTableContainer.add(submitSelectionButton);
 		resultsTableContainer.add(genesTable);
-		
+		resultsTableContainer.add(datasetsTable);
+		submitSelectionButton.setVisible(false);
+		genesTable.setVisible(false);
+		datasetsTable.setVisible(false);
+
 		// Assemble the main panel
+		mainPanel.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 		mainPanel.add(searchPanel);
 		mainPanel.add(resultsTableContainer);
 		mainPanel.add(errorLabel);
@@ -123,60 +138,57 @@ public class GeneSearch implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				int row = genesTable.getCellForEvent(event).getRowIndex();
 				if (row>0) {
-
+					int i=0;
 					int unifeatureKey = Integer.parseInt(genesTable.getText(row, 1));
-
-					// Initialize the service proxy.
-					if (geneSearchSvc == null) {
-						geneSearchSvc = GWT.create(GeneSearchService.class);
+					boolean found = false;
+					
+					
+					// Searches array selectedGenes to find repeated values
+					for (i=0; i<selectedGenes.size() && !found; i++) {
+						if (selectedGenes.get(i).getInt() == unifeatureKey) {
+							found = true;
+						}
 					}
-
-					// Set up the callback object.
-					AsyncCallback<ArrayList<Dataset>> callback = new AsyncCallback<ArrayList<Dataset>>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							errorLabel.setText(SERVER_ERROR);
-						}
-
-						@Override
-						public void onSuccess(ArrayList<Dataset> results) {
-							errorLabel.setText("");
-							updateTableWithDetails(results);
-						}
-					};
-
-					// Make the call to the gene detail search service.
-					geneSearchSvc.geneDetailSearch(unifeatureKey, callback);
+					if (found) {
+						selectedGenes.remove(i-1);
+						genesTable.getRowFormatter().setStyleName(row, "resultsTable-dataRow");
+					} else {
+						selectedGenes.add(new Int(unifeatureKey));
+						genesTable.getRowFormatter().setStyleName(row, "resultsTable-dataRow-selected");
+					}
 				}
 			}
 		});
-	}
-/*
-	private void initializaOracle() {
-		if (geneSearchSvc == null) {
-			geneSearchSvc = GWT.create(GeneSearchService.class);
-		}
 
-		// Set up the callback object.
-		AsyncCallback<ArrayList<String>> callback = new AsyncCallback<ArrayList<String>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				errorLabel.setText(SERVER_ERROR);
-			}
+		// Add a handler to the gene selection submit button
+		submitSelectionButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
 
-			@Override
-			public void onSuccess(ArrayList<String> results) {
-				errorLabel.setText("");
-				for (int i=0; i<results.size(); i++) {
-					oracle.add(results.get(i));
+				// Initialize the service proxy.
+				if (geneSearchSvc == null) {
+					geneSearchSvc = GWT.create(GeneSearchService.class);
 				}
-			}
-		};
 
-		// Make the call to the gene search service.
-		geneSearchSvc.getSuggestions(callback);
+				// Set up the callback object.
+				AsyncCallback<ArrayList<Dataset>> callback = new AsyncCallback<ArrayList<Dataset>>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						errorLabel.setText(SERVER_ERROR);
+					}
+
+					@Override
+					public void onSuccess(ArrayList<Dataset> results) {
+						errorLabel.setText("");
+						updateTableWithDetails(results);
+					}
+				};
+
+				// Make the call to the gene detail search service.
+				geneSearchSvc.geneDetailSearch(selectedGenes, callback);
+			}
+		});
 	}
-*/
+
 	protected void geneSearch(String text) {
 		if (!text.equals("")) {
 			// Initialize the service proxy.
@@ -213,24 +225,21 @@ public class GeneSearch implements EntryPoint {
 			genesTable.setText(i+1, 0, gene.getSymbol());
 			genesTable.setText(i+1, 1, gene.getUnifeatureKey()+"");
 			genesTable.setText(i+1, 2, gene.getAllKnownIds());
-			genesTable.setText(i+1, 3, gene.getOrganism());
-			genesTable.setText(i+1, 4, gene.getAnnotation());
-			
+
 			genesTable.getRowFormatter().setStyleName(i+1, "resultsTable-dataRow");
 		}
-		
+
 		// Remove extra rows from previous search, if any
 		i++;
 		while(i<genesTableRowCount) {
 			genesTable.removeRow(resultsRowCount+1);
 			i++;
 		}
-		
+
 		// Swap current table if it is not genesTable
-		if (!resultsTableContainer.getWidget(0).equals(genesTable)) {
-			resultsTableContainer.remove(0);
-			resultsTableContainer.add(genesTable);
-		}
+		submitSelectionButton.setVisible(true);
+		genesTable.setVisible(true);
+		datasetsTable.setVisible(false);
 	}
 
 	protected void updateTableWithDetails(ArrayList<Dataset> results) {
@@ -244,21 +253,20 @@ public class GeneSearch implements EntryPoint {
 			datasetsTable.setText(i+1, 0, dataset.getDatasetkey()+"");
 			datasetsTable.setText(i+1, 1, dataset.getName());
 			datasetsTable.setText(i+1, 2, dataset.getDescription());
-			
+
 			datasetsTable.getRowFormatter().setStyleName(i+1, "resultsTable-dataRow");
 		}
-		
+
 		// Remove extra rows from previous search, if any
 		i++;
 		while(i<datasetsTableRowCount) {
 			datasetsTable.removeRow(resultsRowCount+1);
 			i++;
 		}
-		
+
 		// Swap current table if it is not datasetsTable
-		if (!resultsTableContainer.getWidget(0).equals(datasetsTable)) {
-			resultsTableContainer.remove(0);
-			resultsTableContainer.add(datasetsTable);
-		}
+		submitSelectionButton.setVisible(false);
+		genesTable.setVisible(false);
+		datasetsTable.setVisible(true);
 	}
 }
