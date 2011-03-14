@@ -94,16 +94,26 @@ GeneSearchService {
 					"(SELECT DISTINCT(DATA_SET_KEY) " +
 					"FROM FEATURE " +
 					"WHERE UNIFEATURE_KEY = " + selectedGenes.get(i).getUnifeatureKey() + ")";
-				ResultSet rs = statement.executeQuery(query);	
+				ResultSet rs = statement.executeQuery(query);
 				while(rs.next()){
-					Dataset dataset = new Dataset();
-					dataset.setDatasetKey(rs.getInt(1));
-					dataset.setName(rs.getString(2));
-					if (rs.getString(3) != null)
-						dataset.setDescription(rs.getString(3));
-					dataset.addGene(selectedGenes.get(i).getSymbol());
-					results.add(dataset);
-					System.out.println (dataset.toString());
+					boolean b = false;
+					int j = 0;
+					for (; j < results.size(); j++)
+						if (rs.getInt(1) == results.get(j).getDatasetKey()){
+							b = true;
+							break;
+						}
+					if (!b){
+						Dataset dataset = new Dataset();
+						dataset.setDatasetKey(rs.getInt(1));
+						dataset.setName(rs.getString(2));
+						if (rs.getString(3) != null)
+							dataset.setDescription(rs.getString(3));
+						dataset.addGene(selectedGenes.get(i).getSymbol());
+						results.add(dataset);
+					}
+					else
+						results.get(j).addGene(selectedGenes.get(i).getSymbol());
 				}
 			}
 			connection.close();
@@ -116,7 +126,7 @@ GeneSearchService {
 	}
 
 	@Override
-	public Int generateHeatMap(ArrayList<Gene> genes, Dataset dataset) throws IOException{
+	public Int generateHeatMap(ArrayList<Gene> selectedGenes, Dataset dataset) throws IOException{
 		// Get the SVG file ready for the drawing of the performance graph 
 		File SVGOutputFile = null;
 		FileWriter SVGout = null;
@@ -135,21 +145,19 @@ GeneSearchService {
 		// Move graph to wherever you want on the screen
 		// Scale the graph to fit wherever
 		SVGout.write("\n<g transform=\"translate(50,50) scale(1.0)\">");
+		try{
+			for(int i = 0; i < selectedGenes.size(); i++){   
+				// Do the query for the values to be displayed on the Heat Map
+				String query = 
+					"SELECT uv.PVALUE " +
+					"FROM UNI_VALUE uv " +
+					"WHERE uv.DATA_SET_KEY = " + dataset.getDatasetKey() +
+					"AND uv.FEATURE_KEY IN " +
+					"(SELECT f.FEATURE_KEY " +
+					"FROM FEATURE f " +
+					"WHERE f.UNIFEATURE_KEY = " + selectedGenes.get(i).getUnifeatureKey() + ")";
 
-		for(int i = 0; i < genes.size(); i++){
-			// Do the query for the values to be displayed on the Heat Map
-			String query = 
-				"SELECT uv.PVALUE " +
-				"FROM UNI_VALUE uv " +
-				"WHERE uv.DATA_SET_KEY = " + dataset.getDatasetKey() +
-				"AND uv.FEATURE_KEY IN " +
-				"(SELECT f.FEATURE_KEY " +
-				"FROM FEATURE f " +
-				"WHERE f.UNIFEATURE_KEY = " + genes.get(i).getUnifeatureKey() + ")";
-			try{
 				ResultSet rs = statement.executeQuery(query);	
-
-				connection.close();
 
 				for(int j = 0; rs.next(); j++){
 					double x = rs.getDouble(0);
@@ -176,16 +184,20 @@ GeneSearchService {
 					else if(x == 1)
 						SVGout.write("\n<rect x=\"" + (j*3) + "\" y=\"" + (i*10) + "\" width=\"3\" height=\"8\" style=\"fill:#FF0000\" />");
 				}
-			} catch (Exception e){
-				System.err.println("ERROR en query");
 			}
-
+			connection.close();
+		} catch (Exception e){
+			System.err.println("ERROR: Problems with the database");
+			e.printStackTrace();
 		}
-
+		
 		// All done. Close off the groups and the SVG file		  
 		SVGout.write("\n</svg>");
 		SVGout.close();
-
+		
 		return null;
+
 	}
+
+	
 }
