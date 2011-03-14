@@ -32,7 +32,6 @@ GeneSearchService {
 	private final String DB_PASSWORD = "theone";
 
 	private Statement statement = null;
-	private Statement statement2 = null;
 	private Connection connection = null;
 
 	public void init() {
@@ -68,7 +67,6 @@ GeneSearchService {
 					gene.setOrganism(rs.getString(5));
 					gene.setAnnotation(rs.getString(6));
 					results.add(gene);
-
 				}
 				connection.close();
 			}
@@ -95,7 +93,7 @@ GeneSearchService {
 					"WHERE DATA_SET_KEY IN " +
 					"(SELECT DISTINCT(DATA_SET_KEY) " +
 					"FROM FEATURE " +
-					"WHERE UNIFEATURE_KEY = " + selectedGenes.get(i).getUnifeatureKey()+")";
+					"WHERE UNIFEATURE_KEY = " + selectedGenes.get(i).getUnifeatureKey() + ")";
 				ResultSet rs = statement.executeQuery(query);	
 				while(rs.next()){
 					Dataset dataset = new Dataset();
@@ -105,7 +103,6 @@ GeneSearchService {
 						dataset.setDescription(rs.getString(3));
 					dataset.addGene(selectedGenes.get(i).getSymbol());
 					results.add(dataset);
-					statement2.close();
 					System.out.println (dataset.toString());
 				}
 			}
@@ -139,13 +136,13 @@ GeneSearchService {
 		// Scale the graph to fit wherever
 		SVGout.write("\n<g transform=\"translate(50,50) scale(1.0)\">");
 
-		for(int i = 0; i < genes.size(); i++){   
+		for(int i = 0; i < genes.size(); i++){
 			// Do the query for the values to be displayed on the Heat Map
 			String query = 
 				"SELECT uv.PVALUE " +
 				"FROM UNI_VALUE uv " +
 				"WHERE uv.DATA_SET_KEY = " + dataset.getDatasetKey() +
-				"AND uv.FEATURE_KEY = " +
+				"AND uv.FEATURE_KEY IN " +
 				"(SELECT f.FEATURE_KEY " +
 				"FROM FEATURE f " +
 				"WHERE f.UNIFEATURE_KEY = " + genes.get(i).getUnifeatureKey() + ")";

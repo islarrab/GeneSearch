@@ -1,2 +1,0 @@
-serviceClass: biomatec.client.SearchSuggestionService
-path: 586D48FA670AEA2C28FABB1D226A86BC.gwt.rpc
