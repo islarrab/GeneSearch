@@ -95,7 +95,7 @@ GeneSearchService {
 					"WHERE DATA_SET_KEY IN " +
 					"(SELECT DISTINCT(DATA_SET_KEY) " +
 					"FROM FEATURE " +
-					"WHERE UNIFEATURE_KEY = " + selectedGenes.get(i).getUnifeatureKey();
+					"WHERE UNIFEATURE_KEY = " + selectedGenes.get(i).getUnifeatureKey()+")";
 				ResultSet rs = statement.executeQuery(query);	
 				while(rs.next()){
 					Dataset dataset = new Dataset();
