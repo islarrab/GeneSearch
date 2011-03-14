@@ -49,7 +49,7 @@ h1 {
 }
 
 .resultsTable-dataRow:active {
-	background-color: red;
+	background-color: #BCF;
 }
 
 /** Most GWT widgets already have a style name defined */

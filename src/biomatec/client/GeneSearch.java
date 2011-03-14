@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -51,13 +52,12 @@ public class GeneSearch implements EntryPoint{
 	private FlexTable genesTable = new FlexTable();
 	private FlexTable datasetsTable = new FlexTable();
 	private TextBox searchTextBox = new TextBox();
-	private SuggestBox searchSuggestBox;
+	//private SuggestBox searchSuggestBox;
 	private ListBox searchListBox = new ListBox();
 	private Button searchButton = new Button("Search");
 	private Button submitSelectionButton = new Button("Submit Selection");
 	private Label errorLabel = new Label();
 	
-	private ArrayList<String> slectedGenesNames = new ArrayList<String>();
 	private ArrayList<Int> selectedGenes = new ArrayList<Int>();
 
 	/**
@@ -84,8 +84,9 @@ public class GeneSearch implements EntryPoint{
 
 		// Assemble the search suggest box
 		GeneSuggestOracle oracle = new GeneSuggestOracle();
-		searchSuggestBox = new SuggestBox(oracle);
-
+		//searchSuggestBox = new SuggestBox(oracle);
+		
+		
 		// Assemble the search panel
 		searchPanel.setVerticalAlignment(HasAlignment.ALIGN_MIDDLE);
 		searchPanel.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
@@ -195,11 +196,23 @@ public class GeneSearch implements EntryPoint{
 						History.newItem("Details table");
 					}
 				};
+				
+				
 
 				// Make the call to the gene detail search service.
 				geneSearchSvc.geneDetailSearch(selectedGenes, callback);
 			}
 		});
+		
+		// Add a handler to the results table
+		datasetsTable.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				RootPanel.get("yield").clear();
+				RootPanel.get("yield").add(new GeneView(selectedGenes));
+			}
+		});
+		
+		
 	}
 
 	protected void geneSearch(String text) {
