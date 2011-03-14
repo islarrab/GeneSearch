@@ -126,7 +126,7 @@ GeneSearchService {
 	}
 
 	@Override
-	public Int generateHeatMap(ArrayList<Gene> genes, Dataset dataset) throws IOException{
+	public Int generateHeatMap(ArrayList<Gene> selectedGenes, Dataset dataset) throws IOException{
 		// Get the SVG file ready for the drawing of the performance graph 
 		File SVGOutputFile = null;
 		FileWriter SVGout = null;
@@ -145,21 +145,19 @@ GeneSearchService {
 		// Move graph to wherever you want on the screen
 		// Scale the graph to fit wherever
 		SVGout.write("\n<g transform=\"translate(50,50) scale(1.0)\">");
+		try{
+			for(int i = 0; i < selectedGenes.size(); i++){   
+				// Do the query for the values to be displayed on the Heat Map
+				String query = 
+					"SELECT uv.PVALUE " +
+					"FROM UNI_VALUE uv " +
+					"WHERE uv.DATA_SET_KEY = " + dataset.getDatasetKey() +
+					"AND uv.FEATURE_KEY = " +
+					"(SELECT f.FEATURE_KEY " +
+					"FROM FEATURE f " +
+					"WHERE f.UNIFEATURE_KEY = " + selectedGenes.get(i).getUnifeatureKey() + ")";
 
-		for(int i = 0; i < genes.size(); i++){   
-			// Do the query for the values to be displayed on the Heat Map
-			String query = 
-				"SELECT uv.PVALUE " +
-				"FROM UNI_VALUE uv " +
-				"WHERE uv.DATA_SET_KEY = " + dataset.getDatasetKey() +
-				"AND uv.FEATURE_KEY = " +
-				"(SELECT f.FEATURE_KEY " +
-				"FROM FEATURE f " +
-				"WHERE f.UNIFEATURE_KEY = " + genes.get(i).getUnifeatureKey() + ")";
-			try{
 				ResultSet rs = statement.executeQuery(query);	
-
-				connection.close();
 
 				for(int j = 0; rs.next(); j++){
 					double x = rs.getDouble(0);
@@ -186,16 +184,20 @@ GeneSearchService {
 					else if(x == 1)
 						SVGout.write("\n<rect x=\"" + (j*3) + "\" y=\"" + (i*10) + "\" width=\"3\" height=\"8\" style=\"fill:#FF0000\" />");
 				}
-			} catch (Exception e){
-				System.err.println("ERROR en query");
 			}
-
+			connection.close();
+		} catch (Exception e){
+			System.err.println("ERROR: Problems with the database");
+			e.printStackTrace();
 		}
-
+		
 		// All done. Close off the groups and the SVG file		  
 		SVGout.write("\n</svg>");
 		SVGout.close();
-
+		
 		return null;
+
 	}
+
+	
 }
