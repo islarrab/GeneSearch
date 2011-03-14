@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -100,13 +99,11 @@ GeneSearchService {
 				ResultSet rs = statement.executeQuery(query);	
 				while(rs.next()){
 					Dataset dataset = new Dataset();
-					dataset.setDatasetkey(rs.getInt(1));
+					dataset.setDatasetKey(rs.getInt(1));
 					dataset.setName(rs.getString(2));
 					if (rs.getString(3) != null)
 						dataset.setDescription(rs.getString(3));
 					dataset.addGene(selectedGenes.get(i).getSymbol());
-					if (!dataset.getGenes().equals(""))
-						dataset.trimGenes();
 					results.add(dataset);
 					statement2.close();
 					System.out.println (dataset.toString());
@@ -122,7 +119,7 @@ GeneSearchService {
 	}
 
 	@Override
-	public Int generateHeatMap(ArrayList<Int> genes, Dataset dataset) throws IOException{
+	public Int generateHeatMap(ArrayList<Gene> genes, Dataset dataset) throws IOException{
 		// Get the SVG file ready for the drawing of the performance graph 
 		File SVGOutputFile = null;
 		FileWriter SVGout = null;
@@ -151,7 +148,7 @@ GeneSearchService {
 				"AND uv.FEATURE_KEY = " +
 				"(SELECT f.FEATURE_KEY " +
 				"FROM FEATURE f " +
-				"WHERE f.UNIFEATURE_KEY = " + genes.get(i).getInt() + ")";
+				"WHERE f.UNIFEATURE_KEY = " + genes.get(i).getUnifeatureKey() + ")";
 			try{
 				ResultSet rs = statement.executeQuery(query);	
 

@@ -45,7 +45,7 @@ public class Dataset implements Serializable{
 	}
 	
    /*Sets*/
-	public void setDatasetkey (int newValue){
+	public void setDatasetKey (int newValue){
 		data_set_key = newValue;
 	}
 	
@@ -66,11 +66,7 @@ public class Dataset implements Serializable{
 	}
 	
 	public void addGene (String gene){
-		this.genes += gene + ", ";
-	}
-	
-	public void trimGenes (){
-		this.genes = this.genes.substring(0, this.genes.length() - 2);
+		this.genes += gene + " ";
 	}
 	
 	public String toString(){

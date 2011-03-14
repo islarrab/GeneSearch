@@ -15,8 +15,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface GeneSearchServiceAsync {
 	void geneSearch(String input, AsyncCallback<ArrayList<Gene>> callback)
 			throws IllegalArgumentException;
-	void geneDetailSearch(ArrayList<Int> input, AsyncCallback<ArrayList<Dataset>> callback)
+	void geneDetailSearch(ArrayList<Gene> selectedGenes, AsyncCallback<ArrayList<Dataset>> callback)
 		throws IllegalArgumentException;
-	void generateHeatMap(ArrayList<Int> gene, Dataset dataset, AsyncCallback<Int> callback)
+	void generateHeatMap(ArrayList<Gene> selectedGenes, Dataset dataset, AsyncCallback<Int> callback)
 		throws IOException;
 }

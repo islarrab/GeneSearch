@@ -20,11 +20,9 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -48,7 +46,6 @@ public class GeneSearch implements EntryPoint{
 
 	private VerticalPanel mainPanel = new VerticalPanel();
 	private VerticalPanel resultsTableContainer = new VerticalPanel();
-	private History history = new History();
 	private HorizontalPanel searchPanel = new HorizontalPanel();
 	private FlexTable genesTable = new FlexTable();
 	private FlexTable datasetsTable = new FlexTable();
@@ -58,14 +55,14 @@ public class GeneSearch implements EntryPoint{
 	private Button searchButton = new Button("Search");
 	private Button submitSelectionButton = new Button("Submit Selection");
 	private Label errorLabel = new Label();
-	
-	private ArrayList<Int> selectedGenes = new ArrayList<Int>();
+
+	private ArrayList<Gene> selectedGenes = new ArrayList<Gene>();
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		
+
 		// Table headers for the genes table
 		genesTable.setText(0, 0, "SYMBOL");
 		genesTable.setText(0, 1, "ENTREZ ID");
@@ -87,8 +84,8 @@ public class GeneSearch implements EntryPoint{
 		// Assemble the search suggest box
 		//GeneSuggestOracle oracle = new GeneSuggestOracle();
 		//searchSuggestBox = new SuggestBox(oracle);
-		
-		
+
+
 		// Assemble the search panel
 		searchPanel.setVerticalAlignment(HasAlignment.ALIGN_MIDDLE);
 		searchPanel.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
@@ -124,15 +121,15 @@ public class GeneSearch implements EntryPoint{
 		// Focus the cursor on the search field when the app loads
 		searchTextBox.setFocus(true);
 		searchTextBox.selectAll();
-		
+
 		// Setup history
 		History.newItem("Initial state");
-		
+
 		// Add a handler to search button
 		searchButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				geneSearch(searchTextBox.getText());
-				
+
 				History.newItem("Gene search");
 			}
 		});
@@ -142,7 +139,7 @@ public class GeneSearch implements EntryPoint{
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getCharCode() == KeyCodes.KEY_ENTER) {
 					geneSearch(searchTextBox.getText());
-					
+
 					History.newItem("Gene search");
 				}
 			}
@@ -156,11 +153,11 @@ public class GeneSearch implements EntryPoint{
 					int i=0;
 					int unifeatureKey = Integer.parseInt(genesTable.getText(row, 1));
 					boolean found = false;
-					
-					
+
+
 					// Searches array selectedGenes to find repeated values
 					for (i=0; i<selectedGenes.size() && !found; i++) {
-						if (selectedGenes.get(i).getInt() == unifeatureKey) {
+						if (selectedGenes.get(i).getUnifeatureKey() == unifeatureKey) {
 							found = true;
 						}
 					}
@@ -168,7 +165,11 @@ public class GeneSearch implements EntryPoint{
 						selectedGenes.remove(i-1);
 						genesTable.getRowFormatter().setStyleName(row, "resultsTable-dataRow");
 					} else {
-						selectedGenes.add(new Int(unifeatureKey));
+						Gene gene = new Gene();
+						gene.setSymbol(genesTable.getText(row, 0));
+						gene.setUnifeatureKey(unifeatureKey);
+						
+						selectedGenes.add(gene);
 						genesTable.getRowFormatter().setStyleName(row, "resultsTable-dataRow-selected");
 					}
 				}
@@ -198,51 +199,35 @@ public class GeneSearch implements EntryPoint{
 						History.newItem("Details table");
 					}
 				};
-				
-				
+
+
 
 				// Make the call to the gene detail search service.
 				geneSearchSvc.geneDetailSearch(selectedGenes, callback);
 			}
 		});
-		
+
 		// Add a handler to the results table
 		datasetsTable.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				Dataset dataset = new Dataset();
-				int row = datasetsTable.getCellForEvent(event).getRowIndex();
-				if (row>0) {
-					int i=0;
-					int unifeatureKey = Integer.parseInt(datasetsTable.getText(row, 1));
-					boolean found = false;
-					
-					
-					// Searches array selectedGenes to find repeated values
-					for (i=0; i<selectedGenes.size() && !found; i++) {
-						if (selectedGenes.get(i).getInt() == unifeatureKey) {
-							found = true;
-						}
+				try{
+					Dataset dataset = new Dataset();
+					int row = datasetsTable.getCellForEvent(event).getRowIndex();
+					if (row>0) {
+						int datasetKey = Integer.parseInt(datasetsTable.getText(row, 0));
+						dataset.setDatasetKey(datasetKey);
+						dataset.setName(datasetsTable.getText(row, 1));
+						dataset.setDescription(datasetsTable.getText(row, 2));
+						RootPanel.get("yield").clear();
+						RootPanel.get("yield").add(new GeneView(selectedGenes, dataset));
 					}
-					if (found) {
-						selectedGenes.remove(i-1);
-						datasetsTable.getRowFormatter().setStyleName(row, "resultsTable-dataRow");
-					} else {
-						selectedGenes.add(new Int(unifeatureKey));
-						datasetsTable.getRowFormatter().setStyleName(row, "resultsTable-dataRow-selected");
-					}
-				}
-				
-				RootPanel.get("yield").clear();
-				try {
-					RootPanel.get("yield").add(new GeneView(selectedGenes, dataset));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
+				} catch(Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-		
-		
+
+
 	}
 
 	protected void geneSearch(String text) {
@@ -310,7 +295,7 @@ public class GeneSearch implements EntryPoint{
 			datasetsTable.setText(i+1, 1, dataset.getName());
 			datasetsTable.setText(i+1, 2, dataset.getDescription());
 			datasetsTable.setText(i+1, 3, dataset.getGenes());
-			
+
 			datasetsTable.getRowFormatter().setStyleName(i+1, "resultsTable-dataRow");
 		}
 

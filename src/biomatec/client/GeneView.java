@@ -3,9 +3,9 @@ package biomatec.client;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Gene;
 import biomatec.javaBeans.Int;
-import biomatec.javaBeans.Dataset;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -13,7 +13,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -42,7 +41,7 @@ public class GeneView extends Composite {
 	
 	private Image heatmap = new Image();
 
-	public GeneView(ArrayList<Int> selectedGenes, Dataset dataset) throws IOException {
+	public GeneView(ArrayList<Gene> selectedGenes, Dataset dataset) {
 
 		// Assemble main panel
 		mainPanel.add(panelHeader);
@@ -56,9 +55,12 @@ public class GeneView extends Composite {
 		// Assemble the info panel of the header
 		infoPanel.add(genesLabel);
 		infoPanel.add(databaseLabel);
-		genesLabel.setText("genes: ");
-		databaseLabel.setText("database: ");
-
+		genesLabel.setText("genes: "+selectedGenes.get(0).getSymbol());
+		for (int i=1; i<selectedGenes.size(); i++) {
+			genesLabel.setText(genesLabel.getText()+", "+selectedGenes.get(i).getSymbol());
+		}
+		databaseLabel.setText("database: "+dataset.getName());
+		
 		viewsListBox.addItem("Heatmap");
 		
 		
@@ -73,11 +75,17 @@ public class GeneView extends Composite {
 			@Override
 			public void onSuccess(Int result) {
 				errorLabel.setText("");
-				heatmap.setUrl("web.svg");
+				//heatmap.setUrl("biomatec.itesm.mx/web.svg");
+				heatmap.setUrl("localhost/SVGHeatMap.svg");
 			}
 		};
 		
-		geneSearchSvc.generateHeatMap(selectedGenes, dataset, callback);
+		try {
+			geneSearchSvc.generateHeatMap(selectedGenes, dataset, callback);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		addViewButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
