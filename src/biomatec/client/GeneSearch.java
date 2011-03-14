@@ -13,6 +13,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -28,7 +29,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class GeneSearch implements EntryPoint {
+public class GeneSearch implements EntryPoint{
 
 	/**
 	 * The message displayed to the user when the server cannot be reached or
@@ -45,6 +46,7 @@ public class GeneSearch implements EntryPoint {
 
 	private VerticalPanel mainPanel = new VerticalPanel();
 	private VerticalPanel resultsTableContainer = new VerticalPanel();
+	private History history = new History();
 	private HorizontalPanel searchPanel = new HorizontalPanel();
 	private FlexTable genesTable = new FlexTable();
 	private FlexTable datasetsTable = new FlexTable();
@@ -54,12 +56,15 @@ public class GeneSearch implements EntryPoint {
 	private Button searchButton = new Button("Search");
 	private Button submitSelectionButton = new Button("Submit Selection");
 	private Label errorLabel = new Label();
-
+	
+	private ArrayList<String> slectedGenesNames = new ArrayList<String>();
 	private ArrayList<Int> selectedGenes = new ArrayList<Int>();
+
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		
 		// Table headers for the genes table
 		genesTable.setText(0, 0, "SYMBOL");
 		genesTable.setText(0, 1, "ENTREZ ID");
@@ -116,11 +121,16 @@ public class GeneSearch implements EntryPoint {
 		// Focus the cursor on the search field when the app loads
 		searchTextBox.setFocus(true);
 		searchTextBox.selectAll();
-
+		
+		// Setup history
+		History.newItem("Initial state");
+		
 		// Add a handler to search button
 		searchButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				geneSearch(searchTextBox.getText());
+				
+				History.newItem("Gene search");
 			}
 		});
 
@@ -129,6 +139,8 @@ public class GeneSearch implements EntryPoint {
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getCharCode() == KeyCodes.KEY_ENTER) {
 					geneSearch(searchTextBox.getText());
+					
+					History.newItem("Gene search");
 				}
 			}
 		});
@@ -180,6 +192,7 @@ public class GeneSearch implements EntryPoint {
 					public void onSuccess(ArrayList<Dataset> results) {
 						errorLabel.setText("");
 						updateTableWithDetails(results);
+						History.newItem("Details table");
 					}
 				};
 

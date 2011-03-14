@@ -50,7 +50,8 @@ GeneSearchService {
 			ArrayList<Gene> results = new ArrayList<Gene>();
 			try{
 				String query = 
-					"SELECT * FROM UNIFEATURE " +
+					"SELECT UNIFEATURE_KEY, SYMBOL, ALL_KNOWN_IDS, ANNOTATION " +
+					"FROM UNIFEATURE " +
 					"WHERE ALL_KNOWN_IDS LIKE '%|" + input + "%'";
 
 				ResultSet rs = statement.executeQuery(query);	
@@ -58,11 +59,9 @@ GeneSearchService {
 				while(rs.next()){
 					Gene gene = new Gene();
 					gene.setUnifeatureKey(rs.getInt(1));
-					gene.setFeatureTypeKey(rs.getInt(2));
-					gene.setSymbol(rs.getString(3));
-					gene.setAllKnownIds(rs.getString(4));
-					gene.setOrganism(rs.getString(5));
-					gene.setAnnotation(rs.getString(6));
+					gene.setSymbol(rs.getString(2));
+					gene.setAllKnownIds(rs.getString(3));
+					gene.setAnnotation(rs.getString(4));
 					results.add(gene);
 
 				}

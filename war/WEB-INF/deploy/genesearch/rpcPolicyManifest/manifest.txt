@@ -1,4 +1,2 @@
 # Module genesearch
 # RPC service class, partial path of RPC policy file
-biomatec.client.SearchSuggestionService, 586D48FA670AEA2C28FABB1D226A86BC.gwt.rpc
-biomatec.client.GeneSearchService, 7FE188DCFFDF4014B0785430E0281C73.gwt.rpc

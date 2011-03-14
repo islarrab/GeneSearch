@@ -66,7 +66,12 @@ public class Gene implements Serializable{
 	}
 	
 	public void setAllKnownIds (String all_known_ids){
-		this.all_known_ids = all_known_ids;
+		this.all_known_ids = "";
+		while (all_known_ids.length() > 30){
+			this.all_known_ids += all_known_ids.substring(0,30) + "\n";
+			all_known_ids = all_known_ids.substring(30);
+		}
+		this.all_known_ids += all_known_ids;
 	}
 	
    public void setOrganism (String organism){
