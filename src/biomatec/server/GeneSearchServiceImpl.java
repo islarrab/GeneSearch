@@ -32,7 +32,6 @@ GeneSearchService {
 	private final String DB_PASSWORD = "theone";
 
 	private Statement statement = null;
-	private Statement statement2 = null;
 	private Connection connection = null;
 
 	public void init() {
@@ -68,7 +67,6 @@ GeneSearchService {
 					gene.setOrganism(rs.getString(5));
 					gene.setAnnotation(rs.getString(6));
 					results.add(gene);
-
 				}
 				connection.close();
 			}
@@ -95,7 +93,7 @@ GeneSearchService {
 					"WHERE DATA_SET_KEY IN " +
 					"(SELECT DISTINCT(DATA_SET_KEY) " +
 					"FROM FEATURE " +
-					"WHERE UNIFEATURE_KEY = " + selectedGenes.get(i).getUnifeatureKey();
+					"WHERE UNIFEATURE_KEY = " + selectedGenes.get(i).getUnifeatureKey() + ")";
 				ResultSet rs = statement.executeQuery(query);	
 				while(rs.next()){
 					Dataset dataset = new Dataset();
@@ -105,7 +103,6 @@ GeneSearchService {
 						dataset.setDescription(rs.getString(3));
 					dataset.addGene(selectedGenes.get(i).getSymbol());
 					results.add(dataset);
-					statement2.close();
 					System.out.println (dataset.toString());
 				}
 			}
