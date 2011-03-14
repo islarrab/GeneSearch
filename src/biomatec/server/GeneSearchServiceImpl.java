@@ -29,6 +29,7 @@ GeneSearchService {
 	private final String DB_PASSWORD = "theone";
 
 	private Statement statement = null;
+	private Statement statement2 = null;
 	private Connection connection = null;
 
 	public void init() {
@@ -82,6 +83,7 @@ GeneSearchService {
 	throws IllegalArgumentException {
 		init();
 		ArrayList<Dataset> results = new ArrayList<Dataset>();
+		int [] genes = new int [input.size()];
 		try{
 			String query = 
 				"SELECT DATA_SET_KEY, NAME, DESCRIPTION " +
@@ -92,6 +94,7 @@ GeneSearchService {
 				"WHERE UNIFEATURE_KEY IN (" + input.get(0).getInt();
 			for(int i = 1; i < input.size(); i++){
 				query += ", " + input.get(i).getInt();
+				genes[i] = input.get(i).getInt();
 			}
 			query += "));";
 			
@@ -101,8 +104,22 @@ GeneSearchService {
 				dataset.setDatasetkey(rs.getInt(1));
 				dataset.setName(rs.getString(2));
 				dataset.setDescription(rs.getString(3));
+				query = "SELECT u.UNIFEATURE_KEY, u.SYMBOL " + 
+						"FROM UNIFEATURE u, FEATURE f " +
+						"WHERE f.DATA_SET_KEY = " + dataset.getDatasetKey() + " " +
+						"AND f.UNIFEATURE_KEY = u.UNIFEATURE_KEY";
+				statement2 = connection.createStatement();
+				ResultSet rs2 = statement2.executeQuery(query);
+				while (rs2.next()){
+					for (int i = 0; i < genes.length; i++)
+						if (rs2.getInt(1) == genes[i] && !dataset.getGenes().contains(rs2.getString(2)))
+							dataset.addGene(rs2.getString(2));
+				}
+				if (!dataset.getGenes().equals(""))
+					dataset.trimGenes();
 				results.add(dataset);
-				System.out.println(rs.getInt(1) + " " + rs.getString(2));
+				statement2.close();
+				System.out.println (dataset.toString());
 			}
 			connection.close();
 		}

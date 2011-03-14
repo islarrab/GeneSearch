@@ -13,15 +13,17 @@ public class Dataset implements Serializable{
 	private int data_set_key;
 	private String name;
 	private String description;
+	private String genes;
    
    /*Constructors*/
 	public Dataset(){
 		name = "";
 		description = "";
+		genes = "";
 	}
    
    /*Gets*/
-	public int getDatasetkey(){
+	public int getDatasetKey(){
 		return data_set_key;
 	}
 	
@@ -31,6 +33,10 @@ public class Dataset implements Serializable{
 	
 	public String getDescription (){
 		return description;
+	}
+	
+	public String getGenes (){
+		return genes;
 	}
 	
    /*Sets*/
@@ -44,5 +50,21 @@ public class Dataset implements Serializable{
 	
 	public void setDescription (String newValue){
 		this.description = newValue;
-	}      
+	}
+	
+	public void setGenes (String newValue){
+		this.genes = newValue;
+	}
+	
+	public void addGene (String gene){
+		this.genes += gene + ", ";
+	}
+	
+	public void trimGenes (){
+		this.genes = this.genes.substring(0, this.genes.length() - 2);
+	}
+	
+	public String toString(){
+		return data_set_key + " " + name + " " + description + " " + genes;
+	}
 }
