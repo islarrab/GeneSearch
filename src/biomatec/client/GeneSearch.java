@@ -84,7 +84,7 @@ public class GeneSearch implements EntryPoint{
 		searchListBox.addItem("Gene");
 
 		// Assemble the search suggest box
-		GeneSuggestOracle oracle = new GeneSuggestOracle();
+		//GeneSuggestOracle oracle = new GeneSuggestOracle();
 		//searchSuggestBox = new SuggestBox(oracle);
 		
 		
@@ -208,6 +208,28 @@ public class GeneSearch implements EntryPoint{
 		// Add a handler to the results table
 		datasetsTable.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				int row = datasetsTable.getCellForEvent(event).getRowIndex();
+				if (row>0) {
+					int i=0;
+					int unifeatureKey = Integer.parseInt(datasetsTable.getText(row, 1));
+					boolean found = false;
+					
+					
+					// Searches array selectedGenes to find repeated values
+					for (i=0; i<selectedGenes.size() && !found; i++) {
+						if (selectedGenes.get(i).getInt() == unifeatureKey) {
+							found = true;
+						}
+					}
+					if (found) {
+						selectedGenes.remove(i-1);
+						datasetsTable.getRowFormatter().setStyleName(row, "resultsTable-dataRow");
+					} else {
+						selectedGenes.add(new Int(unifeatureKey));
+						datasetsTable.getRowFormatter().setStyleName(row, "resultsTable-dataRow-selected");
+					}
+				}
+				
 				RootPanel.get("yield").clear();
 				RootPanel.get("yield").add(new GeneView(selectedGenes));
 			}

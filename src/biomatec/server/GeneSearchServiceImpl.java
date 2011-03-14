@@ -159,12 +159,11 @@ GeneSearchService {
 			String query = 
 				"SELECT uv.PVALUE " +
 				"FROM UNI_VALUE uv " +
-				"WHERE uv.DATA_SET_KEY = " + dataset.get(i).getDatasetkey() +
+				"WHERE uv.DATA_SET_KEY = " + dataset.get(i).getDatasetKey() +
 				"AND uv.FEATURE_KEY = " +
 				"(SELECT f.FEATURE_KEY " +
 				"FROM FEATURE f " +
 				"WHERE f.UNIFEATURE_KEY = " + gene.get(i).getUnifeatureKey() + ")";
-			
 			try{
 				ResultSet rs = statement.executeQuery(query);	
 	
@@ -206,6 +205,5 @@ GeneSearchService {
         SVGout.close();
         
         return null;
-		
 	}
 }
