@@ -17,6 +17,6 @@ public interface GeneSearchServiceAsync {
 			throws IllegalArgumentException;
 	void geneDetailSearch(ArrayList<Int> input, AsyncCallback<ArrayList<Dataset>> callback)
 		throws IllegalArgumentException;
-	void generateHeatMap(ArrayList<Gene> gene, ArrayList<Dataset> dataset, AsyncCallback<Int> callback)
+	void generateHeatMap(ArrayList<Int> gene, Dataset dataset, AsyncCallback<Int> callback)
 		throws IOException;
 }

@@ -1,7 +1,9 @@
 package biomatec.server;
 
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -134,7 +136,7 @@ GeneSearchService {
 	}
 
 	@Override
-	public Int generateHeatMap(ArrayList<Gene> gene, ArrayList<Dataset> dataset) throws IOException{
+	public Int generateHeatMap(ArrayList<Int> genes, Dataset dataset) throws IOException{
         // Get the SVG file ready for the drawing of the performance graph 
 		File SVGOutputFile = null;
 		FileWriter SVGout = null;
@@ -154,16 +156,16 @@ GeneSearchService {
         // Scale the graph to fit wherever
         SVGout.write("\n<g transform=\"translate(50,50) scale(1.0)\">");
 	        
-	    for(int i = 0; i < gene.size(); i++){   
+	    for(int i = 0; i < genes.size(); i++){   
 	    	// Do the query for the values to be displayed on the Heat Map
 			String query = 
 				"SELECT uv.PVALUE " +
 				"FROM UNI_VALUE uv " +
-				"WHERE uv.DATA_SET_KEY = " + dataset.get(i).getDatasetKey() +
+				"WHERE uv.DATA_SET_KEY = " + dataset.getDatasetKey() +
 				"AND uv.FEATURE_KEY = " +
 				"(SELECT f.FEATURE_KEY " +
 				"FROM FEATURE f " +
-				"WHERE f.UNIFEATURE_KEY = " + gene.get(i).getUnifeatureKey() + ")";
+				"WHERE f.UNIFEATURE_KEY = " + genes.get(i).getInt() + ")";
 			try{
 				ResultSet rs = statement.executeQuery(query);	
 	

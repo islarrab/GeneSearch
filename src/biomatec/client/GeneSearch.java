@@ -1,5 +1,6 @@
 package biomatec.client;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import biomatec.javaBeans.Dataset;
@@ -208,6 +209,7 @@ public class GeneSearch implements EntryPoint{
 		// Add a handler to the results table
 		datasetsTable.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				Dataset dataset = new Dataset();
 				int row = datasetsTable.getCellForEvent(event).getRowIndex();
 				if (row>0) {
 					int i=0;
@@ -231,7 +233,12 @@ public class GeneSearch implements EntryPoint{
 				}
 				
 				RootPanel.get("yield").clear();
-				RootPanel.get("yield").add(new GeneView(selectedGenes));
+				try {
+					RootPanel.get("yield").add(new GeneView(selectedGenes, dataset));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		
