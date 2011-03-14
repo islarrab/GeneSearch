@@ -1,4 +1,6 @@
-war/
+war/genesearch/
+war/WEB-INF/classes
+war/WEB-INF/deploy
 test/
 test-classes/
 *.class
