@@ -94,16 +94,26 @@ GeneSearchService {
 					"(SELECT DISTINCT(DATA_SET_KEY) " +
 					"FROM FEATURE " +
 					"WHERE UNIFEATURE_KEY = " + selectedGenes.get(i).getUnifeatureKey() + ")";
-				ResultSet rs = statement.executeQuery(query);	
+				ResultSet rs = statement.executeQuery(query);
 				while(rs.next()){
-					Dataset dataset = new Dataset();
-					dataset.setDatasetKey(rs.getInt(1));
-					dataset.setName(rs.getString(2));
-					if (rs.getString(3) != null)
-						dataset.setDescription(rs.getString(3));
-					dataset.addGene(selectedGenes.get(i).getSymbol());
-					results.add(dataset);
-					System.out.println (dataset.toString());
+					boolean b = false;
+					int j = 0;
+					for (; j < results.size(); j++)
+						if (rs.getInt(1) == results.get(j).getDatasetKey()){
+							b = true;
+							break;
+						}
+					if (!b){
+						Dataset dataset = new Dataset();
+						dataset.setDatasetKey(rs.getInt(1));
+						dataset.setName(rs.getString(2));
+						if (rs.getString(3) != null)
+							dataset.setDescription(rs.getString(3));
+						dataset.addGene(selectedGenes.get(i).getSymbol());
+						results.add(dataset);
+					}
+					else
+						results.get(j).addGene(selectedGenes.get(i).getSymbol());
 				}
 			}
 			connection.close();

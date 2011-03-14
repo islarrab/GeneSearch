@@ -14,7 +14,6 @@ public class Dataset implements Serializable{
 	private String name;
 	private String description;
 	private String genes;
-	private int count;
    
    /*Constructors*/
 	public Dataset(){
@@ -39,10 +38,7 @@ public class Dataset implements Serializable{
 	public String getGenes (){
 		return genes;
 	}
-	
-	public int getCount (){
-		return count;
-	}
+
 	
    /*Sets*/
 	public void setDatasetKey (int newValue){
@@ -61,15 +57,8 @@ public class Dataset implements Serializable{
 		this.genes = newValue;
 	}
 	
-	public void setCount (int newValue){
-		this.count = newValue;
-	}
-	
 	public void addGene (String gene){
 		this.genes += gene + " ";
 	}
-	
-	public String toString(){
-		return data_set_key + " " + name + " " + description + " " + genes;
-	}
+
 }
