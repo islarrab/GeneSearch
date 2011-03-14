@@ -76,6 +76,7 @@ public class GeneSearch implements EntryPoint{
 		datasetsTable.setText(0, 0, "DATA SET KEY");
 		datasetsTable.setText(0, 1, "NAME");
 		datasetsTable.setText(0, 2, "DESCRIPTION");
+		datasetsTable.setText(0, 3, "GENES FOUND");
 		datasetsTable.setStyleName("resultsTable");
 		datasetsTable.getRowFormatter().setStyleName(0, "resultsTable-headerRow");
 
@@ -276,10 +277,11 @@ public class GeneSearch implements EntryPoint{
 		for (i=0; i<results.size(); i++) {
 			Dataset dataset = (Dataset)results.get(i);
 
-			datasetsTable.setText(i+1, 0, dataset.getDatasetkey()+"");
+			datasetsTable.setText(i+1, 0, dataset.getDatasetKey()+"");
 			datasetsTable.setText(i+1, 1, dataset.getName());
 			datasetsTable.setText(i+1, 2, dataset.getDescription());
-
+			datasetsTable.setText(i+1, 3, dataset.getGenes());
+			
 			datasetsTable.getRowFormatter().setStyleName(i+1, "resultsTable-dataRow");
 		}
 
