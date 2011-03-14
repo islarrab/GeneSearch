@@ -1,5 +1,6 @@
 package biomatec.client;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import biomatec.javaBeans.Dataset;
@@ -16,5 +17,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface GeneSearchService extends RemoteService {
 	ArrayList<Gene> geneSearch(String gene) throws IllegalArgumentException;
 	ArrayList<Dataset> geneDetailSearch(ArrayList<Int> input) throws IllegalArgumentException;
+	Int generateHeatMap(ArrayList<Gene> gene, ArrayList<Dataset> dataset) throws IOException;
 }
 

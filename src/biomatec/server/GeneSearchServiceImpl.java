@@ -1,9 +1,11 @@
 package biomatec.server;
 
 
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -50,8 +52,7 @@ GeneSearchService {
 			ArrayList<Gene> results = new ArrayList<Gene>();
 			try{
 				String query = 
-					"SELECT UNIFEATURE_KEY, SYMBOL, ALL_KNOWN_IDS, ANNOTATION " +
-					"FROM UNIFEATURE " +
+					"SELECT * FROM UNIFEATURE " +
 					"WHERE ALL_KNOWN_IDS LIKE '%|" + input + "%'";
 
 				ResultSet rs = statement.executeQuery(query);	
@@ -59,9 +60,11 @@ GeneSearchService {
 				while(rs.next()){
 					Gene gene = new Gene();
 					gene.setUnifeatureKey(rs.getInt(1));
-					gene.setSymbol(rs.getString(2));
-					gene.setAllKnownIds(rs.getString(3));
-					gene.setAnnotation(rs.getString(4));
+					gene.setFeatureTypeKey(rs.getInt(2));
+					gene.setSymbol(rs.getString(3));
+					gene.setAllKnownIds(rs.getString(4));
+					gene.setOrganism(rs.getString(5));
+					gene.setAnnotation(rs.getString(6));
 					results.add(gene);
 
 				}
@@ -113,4 +116,79 @@ GeneSearchService {
 		return results;
 	}
 
+	@Override
+	public Int generateHeatMap(ArrayList<Gene> gene, ArrayList<Dataset> dataset) throws IOException{
+        // Get the SVG file ready for the drawing of the performance graph 
+		File SVGOutputFile = null;
+		FileWriter SVGout = null;
+		try{
+			SVGOutputFile = new File("SVGHeatMap.svg");
+			SVGout = new FileWriter(SVGOutputFile);
+		} catch (IOException e) {
+			System.err.println("Error al escribir archivo .svg");
+		}
+		
+        // Get the SVG graph ready
+        SVGout.write("<?xml version=\"1.0\"?>");
+        SVGout.write("\n<svg width=\"1300\" height=\"1300\">");
+        SVGout.write("\n<desc>Biomatec gene HeatMaps.</desc>");
+        
+        // Move graph to wherever you want on the screen
+        // Scale the graph to fit wherever
+        SVGout.write("\n<g transform=\"translate(50,50) scale(1.0)\">");
+	        
+	    for(int i = 0; i < gene.size(); i++){   
+	    	// Do the query for the values to be displayed on the Heat Map
+			String query = 
+				"SELECT uv.PVALUE " +
+				"FROM UNI_VALUE uv " +
+				"WHERE uv.DATA_SET_KEY = " + dataset.get(i).getDatasetkey() +
+				"AND uv.FEATURE_KEY = " +
+				"(SELECT f.FEATURE_KEY " +
+				"FROM FEATURE f " +
+				"WHERE f.UNIFEATURE_KEY = " + gene.get(i).getUnifeatureKey() + ")";
+			
+			try{
+				ResultSet rs = statement.executeQuery(query);	
+	
+				connection.close();
+				
+		        for(int j = 0; rs.next(); j++){
+		        	double x = rs.getDouble(0);
+		        	if(x >= 0 && x < .1)
+		        		SVGout.write("\n<rect x=\"" + (j*3) + "\" y=\"" + (i*10) + "\" width=\"3\" height=\"8\" style=\"fill:#0000FF\" />");
+		        	else if(x >= .1 && x < .2)
+		        		SVGout.write("\n<rect x=\"" + (j*3) + "\" y=\"" + (i*10) + "\" width=\"3\" height=\"8\" style=\"fill:#3333FF\" />");
+		        	else if(x >= .2 && x < .3)
+		        		SVGout.write("\n<rect x=\"" + (j*3) + "\" y=\"" + (i*10) + "\" width=\"3\" height=\"8\" style=\"fill:#6666FF\" />");
+		        	else if(x >= .3 && x < .4)
+		        		SVGout.write("\n<rect x=\"" + (j*3) + "\" y=\"" + (i*10) + "\" width=\"3\" height=\"8\" style=\"fill:#9999FF\" />");
+		        	else if(x >= .4 && x < .5)
+		        		SVGout.write("\n<rect x=\"" + (j*3) + "\" y=\"" + (i*10) + "\" width=\"3\" height=\"8\" style=\"fill:#CCCCFF\" />");
+		        	else if(x >= .5 && x < .6)
+		        		SVGout.write("\n<rect x=\"" + (j*3) + "\" y=\"" + (i*10) + "\" width=\"3\" height=\"8\" style=\"fill:#FFFFFF\" />");
+		        	else if(x >= .6 && x < .7)
+		        		SVGout.write("\n<rect x=\"" + (j*3) + "\" y=\"" + (i*10) + "\" width=\"3\" height=\"8\" style=\"fill:#FFCCCC\" />");
+		        	else if(x >= .7 && x < .8)
+		        		SVGout.write("\n<rect x=\"" + (j*3) + "\" y=\"" + (i*10) + "\" width=\"3\" height=\"8\" style=\"fill:#FF9999\" />");
+		        	else if(x >= .8 && x < .9)
+		        		SVGout.write("\n<rect x=\"" + (j*3) + "\" y=\"" + (i*10) + "\" width=\"3\" height=\"8\" style=\"fill:#FF6666\" />");
+		        	else if(x >= .9 && x < 1)
+		        		SVGout.write("\n<rect x=\"" + (j*3) + "\" y=\"" + (i*10) + "\" width=\"3\" height=\"8\" style=\"fill:#FF3333\" />");
+		        	else if(x == 1)
+		        		SVGout.write("\n<rect x=\"" + (j*3) + "\" y=\"" + (i*10) + "\" width=\"3\" height=\"8\" style=\"fill:#FF0000\" />");
+		        }
+	    	} catch (Exception e){
+	    		System.err.println("ERROR en query");
+	    	}
+	    	
+	    }
+	    
+	 // All done. Close off the groups and the SVG file		  
+        SVGout.write("\n</svg>");
+        SVGout.close();
+        
+        return null;
+		
+	}
 }

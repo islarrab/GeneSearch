@@ -1,5 +1,6 @@
 package biomatec.client;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import biomatec.javaBeans.Dataset;
@@ -16,4 +17,6 @@ public interface GeneSearchServiceAsync {
 			throws IllegalArgumentException;
 	void geneDetailSearch(ArrayList<Int> input, AsyncCallback<ArrayList<Dataset>> callback)
 		throws IllegalArgumentException;
+	void generateHeatMap(ArrayList<Gene> gene, ArrayList<Dataset> dataset, AsyncCallback<Int> callback)
+		throws IOException;
 }
