@@ -40,7 +40,7 @@ public class Dataset implements Serializable{
 	}
 	
    /*Sets*/
-	public void setDatasetkey (int newValue){
+	public void setDatasetKey (int newValue){
 		data_set_key = newValue;
 	}
 	
