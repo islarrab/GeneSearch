@@ -14,7 +14,6 @@
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='biomatec.client.GeneSearch'/>
-  <entry-point class='biomatec.client.GeneView'/>
   
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>

@@ -15,10 +15,11 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class GeneView extends Composite {
 	
 	private VerticalPanel mainPanel = new VerticalPanel();
+	private VerticalPanel infoPanel = new VerticalPanel();
 	private HorizontalPanel panelHeader = new HorizontalPanel();
 	private ScrollPanel viewsPanel = new ScrollPanel();
 	
-	private Label infoLabel = new Label();
+	private Label genesLabel = new Label();
 	private Label databaseLabel = new Label();
 	private ListBox viewsListBox = new ListBox();
 	private Button addViewButton = new Button("Add");
@@ -31,11 +32,15 @@ public class GeneView extends Composite {
 		mainPanel.add(viewsPanel);
 		
 		// Assemble the main panel header
-		panelHeader.add(infoLabel);
+		panelHeader.add(infoPanel);
 		panelHeader.add(viewsListBox);
 		panelHeader.add(addViewButton);
 		
-		infoLabel.setText("genes:\ndatabase:");
+		// Assemble the info panel of the header
+		infoPanel.add(genesLabel);
+		infoPanel.add(databaseLabel);
+		genesLabel.setText("genes: ");
+		databaseLabel.setText("database: ");
 		
 		//viewsListBox.addItem(item, value);
 		
