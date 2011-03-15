@@ -1,39 +1,11 @@
 /** Add css rules here for your application. */
 /** Example rules used by the template application (remove for your app) */
 #container {
-	position: relative;
-	top: 10px;
 	width: 1000px;
-	padding: 15px;
 	margin: 0 auto;
 	background-color: #D6F5F5;
-	-moz-border-radius: 20px;
-	border-radius: 20px; 
-	-webkit-box-shadow: 2px 2px 1px #0065c9;
-	-moz-box-shadow: 2px 2px 1px #0065c9;
-	box-shadow: 2px 2px 1px #0065c9; 
 }
 
-#yield {
-	text-align: center;
-	margin-left: auto;
-	margin-right: auto;
-}
-#header {
-	text-align: center;
-}
-#header img {
-	display: inline;
-}
-#logo_biomatec {
-	width: 287px;
-	height: 71px;
-}
-
-#logo_itesm {
-	width: 167px;
-	height: 82px;
-}
 #header h1 {
 	font-size: 2em;
 	font-weight: bold;
@@ -51,11 +23,6 @@
 	padding: none;
 	border-collapse:collapse;
 	border: none;
-}
-
-.dataSetTable {
-	position: relative;
-	left: 120px;
 }
 
 .resultsTable th, .resultsTable td {
@@ -107,3 +74,7 @@
 #closeButton {
 	margin: 15px 6px 6px;
 }
+
+#yield {
+	margin-left: auto;
+	margin-right: auto;

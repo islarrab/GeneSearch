@@ -76,7 +76,6 @@ public class GeneSearch implements EntryPoint{
 		datasetsTable.setText(0, 2, "DESCRIPTION");
 		datasetsTable.setText(0, 3, "GENES FOUND");
 		datasetsTable.setStyleName("resultsTable");
-		datasetsTable.setStyleName("dataSetTable");
 		datasetsTable.getRowFormatter().setStyleName(0, "resultsTable-headerRow");
 
 		// Assemble the search ListBox
