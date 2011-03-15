@@ -152,7 +152,7 @@ GeneSearchService {
 					"SELECT uv.PVALUE " +
 					"FROM UNI_VALUE uv " +
 					"WHERE uv.DATA_SET_KEY = " + dataset.getDatasetKey() +
-					"AND uv.FEATURE_KEY = " +
+					"AND uv.FEATURE_KEY IN " +
 					"(SELECT f.FEATURE_KEY " +
 					"FROM FEATURE f " +
 					"WHERE f.UNIFEATURE_KEY = " + selectedGenes.get(i).getUnifeatureKey() + ")";
