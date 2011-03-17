@@ -1,6 +1,5 @@
 package biomatec.server;
 
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

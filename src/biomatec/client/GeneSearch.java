@@ -1,12 +1,9 @@
 package biomatec.client;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Gene;
-import biomatec.javaBeans.Int;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -117,7 +114,7 @@ public class GeneSearch implements EntryPoint{
 
 		// Attach RootPanel to div "yield"
 		RootPanel.get("yield").add(mainPanel);
-
+		
 		// Focus the cursor on the search field when the app loads
 		searchTextBox.setFocus(true);
 		searchTextBox.selectAll();
