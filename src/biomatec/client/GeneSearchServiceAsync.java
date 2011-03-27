@@ -5,8 +5,6 @@ import java.util.ArrayList;
 
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Gene;
-import biomatec.javaBeans.Int;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -17,6 +15,6 @@ public interface GeneSearchServiceAsync {
 			throws IllegalArgumentException;
 	void geneDetailSearch(ArrayList<Gene> selectedGenes, AsyncCallback<ArrayList<Dataset>> callback)
 		throws IllegalArgumentException;
-	void generateHeatMap(ArrayList<Gene> selectedGenes, Dataset dataset, AsyncCallback<Int> callback)
+	void generateHeatMap(ArrayList<Gene> selectedGenes, Dataset dataset, AsyncCallback<ArrayList<ArrayList<Double>>> callback)
 		throws IOException;
 }

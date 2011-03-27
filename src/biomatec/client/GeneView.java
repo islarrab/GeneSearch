@@ -5,12 +5,9 @@ import java.util.ArrayList;
 
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Gene;
-import biomatec.javaBeans.Int;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -63,17 +60,15 @@ public class GeneView extends Composite {
 		
 		viewsListBox.addItem("Heatmap");
 		
-		
-
 		// Set up the callback object.
-		AsyncCallback<Int> callback = new AsyncCallback<Int>() {
+		AsyncCallback<ArrayList<ArrayList<Double>>> callback = new AsyncCallback<ArrayList<ArrayList<Double>>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				errorLabel.setText(SERVER_ERROR);
 			}
 
 			@Override
-			public void onSuccess(Int result) {
+			public void onSuccess(ArrayList<ArrayList<Double>> results) {
 				errorLabel.setText("");
 				//heatmap.setUrl("biomatec.itesm.mx/web.svg");
 				heatmap.setUrl("localhost/SVGHeatMap.svg");
