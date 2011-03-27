@@ -3,7 +3,6 @@ package biomatec.javaBeans;
 import java.io.Serializable;
 
 public class Gene implements Serializable{
-	
 	/**
 	 * 
 	 */
