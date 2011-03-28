@@ -30,8 +30,13 @@ public class Heatmap extends Composite {
 	private DockLayoutPanel dock = new DockLayoutPanel(Unit.PX);
 	private VerticalPanel heatmaps = new VerticalPanel();
 	
+	private ArrayList<Gene> selectedGenes;
+	
 	public Heatmap(ArrayList<Gene> selectedGenes, Dataset dataset) {
 		dock.addNorth(generateWidgetHeader(), 100);
+		
+		this.selectedGenes = selectedGenes;
+		
 		AsyncCallback<ArrayList<ArrayList<Double>>> callback = new AsyncCallback<ArrayList<ArrayList<Double>>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -75,6 +80,7 @@ public class Heatmap extends Composite {
 		heatmaps.setBorderWidth(5);
 		for(int i = 0; i < results.size(); i++){
 			HorizontalPanel heatmap = new HorizontalPanel();
+			heatmap.add(new Label(this.selectedGenes.get(i).getSymbol()));
 			//heatmap.setBorderWidth(3);
 			for(int j = 0; j < results.get(i).size(); j++){
 				HorizontalPanel section = new HorizontalPanel();

@@ -26,8 +26,11 @@ public class WikiGenes extends Composite{
 		
 		//Create the genes table
 		genes.setText(0, 0, "GENE");
-		for(int i = 0; i < selectedGenes.size(); i++)
+		genes.getRowFormatter().setStyleName(0, "resultsTable-headerRow");
+		for(int i = 0; i < selectedGenes.size(); i++) {
 			genes.setText(i+1, 0, selectedGenes.get(i).getSymbol());
+			genes.getRowFormatter().setStyleName(i+1, "resultsTable-dataRow");
+		}
 		genes.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
 				int row = genes.getCellForEvent(event).getRowIndex()-1;
@@ -44,6 +47,7 @@ public class WikiGenes extends Composite{
 		
 		//Initialize the Widget
 		this.initWidget(wikiGenePanel);
+		this.setStyleName("view-general");
 	}
 
 }
