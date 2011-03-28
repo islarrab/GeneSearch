@@ -1,30 +1,23 @@
 package biomatec.client;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import biomatec.client.function.FunctionDictionary;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Gene;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class GeneView extends Composite {
 	
 	protected static final String SERVER_ERROR = null;
-
-	private GeneSearchServiceAsync geneSearchSvc = GWT.create(GeneSearchService.class);
 	
 	private VerticalPanel mainPanel = new VerticalPanel();
 	private VerticalPanel infoPanel = new VerticalPanel();
@@ -38,10 +31,8 @@ public class GeneView extends Composite {
 	private Button addViewButton = new Button("Add");
 	
 	private FunctionDictionary fd = new FunctionDictionary();
-	
-	private Image heatmap = new Image();
 
-	public GeneView(ArrayList<Gene> selectedGenes, Dataset dataset) {
+	public GeneView(final ArrayList<Gene> selectedGenes, final Dataset dataset) {
 
 		// Assemble main panel
 		mainPanel.add(panelHeader);
@@ -64,41 +55,15 @@ public class GeneView extends Composite {
 		// Assemble the functions list box
 		fd.generateList(viewsListBox);
 		
-		// Set up the callback object.
-		AsyncCallback<ArrayList<ArrayList<Double>>> callback = new AsyncCallback<ArrayList<ArrayList<Double>>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				errorLabel.setText(SERVER_ERROR);
-			}
-
-			@Override
-			public void onSuccess(ArrayList<ArrayList<Double>> results) {
-				errorLabel.setText("");
-				//heatmap.setUrl("biomatec.itesm.mx/web.svg");
-				heatmap.setUrl("gene0heatmap.svg");
-			}
-		};
-		
-		try {
-			geneSearchSvc.generateHeatMap(selectedGenes, dataset, callback);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		addViewButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				viewsPanel.add(fd.getView(0));
+				int x = Integer.parseInt(viewsListBox.getValue(viewsListBox.getSelectedIndex()));
+				viewsPanel.add(fd.getView(x, selectedGenes, dataset));
 				
-				addView(viewsListBox.getItemText(viewsListBox.getSelectedIndex()));
 			}
 		});
 
 		this.initWidget(mainPanel);
 	}
 
-	public void addView(String s) {
-		Widget w = new Widget();
-		viewsPanel.add(w);
-	}
 }

@@ -75,6 +75,50 @@
 	color: red;
 }
 
+.heatmap0 {
+	background-color: #0000FF;
+}
+
+.heatmap1 {
+	background-color: #3333FF;
+}
+
+.heatmap2 {
+	background-color: #6666FF;
+}
+
+.heatmap3 {
+	background-color: #9999FF;
+}
+
+.heatmap4 {
+	background-color: #CCCCFF;
+}
+
+.heatmap5 {
+	background-color: #FFFFFF;
+}
+
+.heatmap6 {
+	background-color: #FFCCCC;
+}
+
+.heatmap7 {
+	background-color: #FF9999;
+}
+
+.heatmap8 {
+	background-color: #FF6666;
+}
+
+.heatmap9 {
+	background-color: #FF3333;
+}
+
+.heatmap10 {
+	background-color: #FF0000;
+}
+
 /** Set ids using widget.getElement().setId("idOfElement") */
 #closeButton {
 	margin: 15px 6px 6px;

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import biomatec.client.GeneSearchService;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Gene;
+import biomatec.javaBeans.Double;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -131,16 +132,17 @@ GeneSearchService {
 				String query = 
 					"SELECT uv.PVALUE " +
 					"FROM UNI_VALUE uv " +
-					"WHERE uv.DATA_SET_KEY = " + dataset.getDatasetKey() +
+					"WHERE uv.DATA_SET_KEY = 90"+ //+ dataset.getDatasetKey() +
 					" AND uv.FEATURE_KEY IN " +
 					"(SELECT f.FEATURE_KEY " +
 					"FROM FEATURE f " +
-					"WHERE f.UNIFEATURE_KEY = " + selectedGenes.get(i).getUnifeatureKey() + ")";
+					"WHERE f.UNIFEATURE_KEY = 19 )";// + selectedGenes.get(i).getUnifeatureKey() + ")";
 
 				ResultSet rs = statement.executeQuery(query);	
 
-				for(int j = 0; rs.next(); j++){
-					results.get(i).add((double)rs.getFloat("PVALUE"));
+				while(rs.next()){
+					Double d = new Double((double)rs.getFloat("PVALUE"));
+					results.get(i).add(d);
 				}
 			}
 			connection.close();

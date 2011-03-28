@@ -81,8 +81,7 @@ public class GeneSearch implements EntryPoint{
 		// Assemble the search suggest box
 		//GeneSuggestOracle oracle = new GeneSuggestOracle();
 		//searchSuggestBox = new SuggestBox(oracle);
-
-
+		
 		// Assemble the search panel
 		searchPanel.setVerticalAlignment(HasAlignment.ALIGN_MIDDLE);
 		searchPanel.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
