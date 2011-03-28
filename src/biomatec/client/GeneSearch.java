@@ -108,6 +108,7 @@ public class GeneSearch implements EntryPoint{
 		mainPanel.add(searchPanel);
 		mainPanel.add(resultsTableContainer);
 		mainPanel.add(errorLabel);
+		mainPanel.setWidth("1000px");
 
 		// We can add style names to widgets
 		searchButton.addStyleName("sendButton");
@@ -215,6 +216,7 @@ public class GeneSearch implements EntryPoint{
 						dataset.setDatasetKey(datasetKey);
 						dataset.setName(datasetsTable.getText(row, 1));
 						dataset.setDescription(datasetsTable.getText(row, 2));
+						dataset.setGenes(datasetsTable.getText(row, 3));
 						RootPanel.get("yield").clear();
 						RootPanel.get("yield").add(new GeneView(selectedGenes, dataset));
 					}
