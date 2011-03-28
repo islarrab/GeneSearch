@@ -90,6 +90,7 @@ public class GeneSearch implements EntryPoint{
 		searchPanel.add(searchTextBox);
 		searchPanel.add(searchListBox);
 		searchPanel.add(searchButton);
+		searchPanel.setStyleName("searchPanel");
 		searchTextBox.setWidth("300px");
 		searchTextBox.setHeight("23px");
 		searchListBox.setHeight("30px");
@@ -263,8 +264,17 @@ public class GeneSearch implements EntryPoint{
 			genesTable.setText(i+1, 0, gene.getSymbol());
 			genesTable.setText(i+1, 1, gene.getUnifeatureKey()+"");
 			genesTable.setText(i+1, 2, gene.getAllKnownIds());
+			
+			// Searches array selectedGenes to find repeated values
+			boolean found = false;
+			for (int j=0; j<selectedGenes.size() && !found; j++)
+				if (selectedGenes.get(j).getUnifeatureKey() == gene.getUnifeatureKey())
+					found = true;
+			if (found)
+				genesTable.getRowFormatter().setStyleName(i+1, "resultsTable-dataRow-selected");
+			else
+				genesTable.getRowFormatter().setStyleName(i+1, "resultsTable-dataRow");
 
-			genesTable.getRowFormatter().setStyleName(i+1, "resultsTable-dataRow");
 		}
 
 		// Remove extra rows from previous search, if any

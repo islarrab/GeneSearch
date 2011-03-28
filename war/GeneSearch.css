@@ -13,6 +13,11 @@
 	text-align: center;
 }
 
+.searchPanel {
+	margin-left: auto;
+	margin-right: auto;
+}
+
 .sendButton {
 	display: block;
 	font-size: 16pt;
@@ -78,3 +83,4 @@
 #yield {
 	margin-left: auto;
 	margin-right: auto;
+}
