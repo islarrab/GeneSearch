@@ -3,6 +3,7 @@ package biomatec.client;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import biomatec.client.function.FunctionDictionary;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Gene;
 import com.google.gwt.core.client.GWT;
@@ -36,6 +37,8 @@ public class GeneView extends Composite {
 	private ListBox viewsListBox = new ListBox();
 	private Button addViewButton = new Button("Add");
 	
+	private FunctionDictionary fd = new FunctionDictionary();
+	
 	private Image heatmap = new Image();
 
 	public GeneView(ArrayList<Gene> selectedGenes, Dataset dataset) {
@@ -58,7 +61,8 @@ public class GeneView extends Composite {
 		}
 		databaseLabel.setText("database: "+dataset.getName());
 		
-		viewsListBox.addItem("Heatmap");
+		// Assemble the functions list box
+		fd.generateList(viewsListBox);
 		
 		// Set up the callback object.
 		AsyncCallback<ArrayList<ArrayList<Double>>> callback = new AsyncCallback<ArrayList<ArrayList<Double>>>() {
@@ -71,7 +75,7 @@ public class GeneView extends Composite {
 			public void onSuccess(ArrayList<ArrayList<Double>> results) {
 				errorLabel.setText("");
 				//heatmap.setUrl("biomatec.itesm.mx/web.svg");
-				heatmap.setUrl("localhost/SVGHeatMap.svg");
+				heatmap.setUrl("gene0heatmap.svg");
 			}
 		};
 		
@@ -84,6 +88,8 @@ public class GeneView extends Composite {
 		
 		addViewButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				viewsPanel.add(fd.getView(0));
+				
 				addView(viewsListBox.getItemText(viewsListBox.getSelectedIndex()));
 			}
 		});

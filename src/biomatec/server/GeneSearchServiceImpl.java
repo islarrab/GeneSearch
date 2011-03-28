@@ -122,7 +122,7 @@ GeneSearchService {
 	@Override
 	public ArrayList<ArrayList<Double>> generateHeatMap(ArrayList<Gene> selectedGenes, Dataset dataset) throws IOException{
 		ArrayList<ArrayList<Double>> results = new ArrayList<ArrayList<Double>>();
-		
+		init();
 		try{
 			for(int i = 0; i < selectedGenes.size(); i++){   
 				results.add(new ArrayList<Double>());
@@ -132,7 +132,7 @@ GeneSearchService {
 					"SELECT uv.PVALUE " +
 					"FROM UNI_VALUE uv " +
 					"WHERE uv.DATA_SET_KEY = " + dataset.getDatasetKey() +
-					"AND uv.FEATURE_KEY IN " +
+					" AND uv.FEATURE_KEY IN " +
 					"(SELECT f.FEATURE_KEY " +
 					"FROM FEATURE f " +
 					"WHERE f.UNIFEATURE_KEY = " + selectedGenes.get(i).getUnifeatureKey() + ")";
@@ -140,7 +140,7 @@ GeneSearchService {
 				ResultSet rs = statement.executeQuery(query);	
 
 				for(int j = 0; rs.next(); j++){
-					results.get(i).add(rs.getDouble(0));
+					results.get(i).add((double)rs.getFloat("PVALUE"));
 				}
 			}
 			connection.close();

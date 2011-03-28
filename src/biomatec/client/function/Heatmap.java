@@ -5,28 +5,29 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
+import com.google.gwt.user.client.ui.Widget;
 
 public class Heatmap {
-
-	public static void heatmap(ArrayList<ArrayList<Double>> pvalues) {
+	
+	private Widget heatmap = new Widget();
+	
+	public static void heatmap(ArrayList<ArrayList<Double>> values) {
 
 		// Get the SVG file ready for the drawing of the performance graph 
 		File SVGOutputFile = null;
 		FileWriter SVGout = null;
 		try{
-			SVGOutputFile = new File("SVGHeatMap.svg");
+			for(int i = 0; i < values.size(); i++){
+			SVGOutputFile = new File("gene"+i+"heatmap.svg");
 			SVGout = new FileWriter(SVGOutputFile);
 			
-			SVGout.write("<?xml version=\"1.0\"?>");
-			SVGout.write("\n<svg width=\"1300\" height=\"1300\">");
-			SVGout.write("\n<desc>Biomatec gene HeatMaps.</desc>");
+			SVGout.write("<?xml version=\"1.0\" standalone=\"no\"?> <!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">");
+			SVGout.write("<svg width=\"100%\" height=\"100%\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">");
 
 			// Move graph to wherever you want on the screen
 			// Scale the graph to fit wherever
 			SVGout.write("\n<g transform=\"translate(50,50) scale(1.0)\">");
-			for(int i = 0; i < pvalues.size(); i++){
-				for(int j = 0; j < pvalues.get(i).size(); j++){
+				for(int j = 0; j < values.get(i).size(); j++){
 
 					Double x = 0.0;
 					if(x >= 0 && x < .1)
