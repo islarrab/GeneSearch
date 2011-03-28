@@ -10,9 +10,15 @@ import biomatec.javaBeans.Gene;
 import biomatec.javaBeans.Double;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -21,9 +27,11 @@ public class Heatmap extends Composite {
 	private GeneSearchServiceAsync geneSearchSvc = GWT.create(GeneSearchService.class);
 
 	// Vertical panel that will be sent at the end
+	private DockLayoutPanel dock = new DockLayoutPanel(Unit.PX);
 	private VerticalPanel heatmaps = new VerticalPanel();
 	
 	public Heatmap(ArrayList<Gene> selectedGenes, Dataset dataset) {
+		dock.addNorth(generateWidgetHeader(), 100);
 		AsyncCallback<ArrayList<ArrayList<Double>>> callback = new AsyncCallback<ArrayList<ArrayList<Double>>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -32,7 +40,7 @@ public class Heatmap extends Composite {
 
 			@Override
 			public void onSuccess(ArrayList<ArrayList<Double>> results) {
-				generateSVGs(results);
+				generateHeatmaps(results);
 			}
 		};
 
@@ -42,14 +50,32 @@ public class Heatmap extends Composite {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		this.initWidget(heatmaps);
+		this.setStyleName("view-general");
 	}
 
-	private void generateSVGs(ArrayList<ArrayList<Double>> results) {
+	private Widget generateWidgetHeader() {
+		HorizontalPanel hp = new HorizontalPanel();
+		Button btn = new Button("Remove View");
+		Label lb = new Label("Heatmaps view");
+		
+		btn.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				
+			}
+		});
+		
+		hp.add(btn);
+		hp.add(lb);
+		return hp;
+	}
+
+	private void generateHeatmaps(ArrayList<ArrayList<Double>> results) {
 		heatmaps.setBorderWidth(5);
 		for(int i = 0; i < results.size(); i++){
 			HorizontalPanel heatmap = new HorizontalPanel();
-			heatmap.setBorderWidth(3);
+			//heatmap.setBorderWidth(3);
 			for(int j = 0; j < results.get(i).size(); j++){
 				HorizontalPanel section = new HorizontalPanel();
 				section.setBorderWidth(0);

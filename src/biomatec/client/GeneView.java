@@ -25,7 +25,7 @@ public class GeneView extends Composite {
 	private VerticalPanel mainPanel = new VerticalPanel();
 	private VerticalPanel infoPanel = new VerticalPanel();
 	private DockPanel panelHeader = new DockPanel();
-	private ScrollPanel viewsPanel = new ScrollPanel();
+	private VerticalPanel viewsPanel = new VerticalPanel();
 	private HorizontalPanel addViewPanel = new HorizontalPanel();
 
 	private HTML genesLabel = new HTML();

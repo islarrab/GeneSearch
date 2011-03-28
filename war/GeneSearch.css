@@ -79,6 +79,22 @@
 	color: red;
 }
 
+.view-general {
+	border-style: groove;
+	border-color: #BBB;
+	border-width: 3px;
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+	
+	margin-left: auto;
+	margin-right: auto;
+	
+	padding: 10px 10px 10px 10px;
+	
+	background-color: #33A;
+}
+
 .heatmap0 {
 	background-color: #0000FF;
 }

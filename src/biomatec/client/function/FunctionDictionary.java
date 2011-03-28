@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Gene;
 
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -29,7 +30,7 @@ public class FunctionDictionary {
 		
 	}
 
-	public Widget getView(int x, ArrayList<Gene> selectedGenes, Dataset dataset) {
+	public Composite getView(int x, ArrayList<Gene> selectedGenes, Dataset dataset) {
 		switch(x) {
 		case HEATMAP:
 			return new Heatmap(selectedGenes, dataset);
