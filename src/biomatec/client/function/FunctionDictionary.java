@@ -10,30 +10,32 @@ import com.google.gwt.user.client.ui.ListBox;
 
 public class FunctionDictionary {
 	
-	private final int HEATMAP = 0;
-	private final int WIKIGENES = 1;
+	private ArrayList<Function> functions = new ArrayList<Function>();
 	
 	public FunctionDictionary() {
+		functions.add(new Function("Heatmap",
+				"http://biomatec.mty.itesm.mx:8080/Biomatec1/getRowData.jsp?dsk=<dsk>&unifeaturekey=<ufk>&format=text&type=%%Type%%",
+				"special",
+				'M'));
+		
+		functions.add(new Function("Wikigenes.com",
+				"http://www.wikigenes.org/e/gene/e/<ufk>.html",
+				"none",
+				'S'));
 		
 	}
 	
+	/**
+	 * used to dynamically generate the functions in a list
+	 * @param lb the list to be populated with functions
+	 */
 	public void generateList(ListBox lb) {
-		lb.addItem("Heatmap", HEATMAP+"");
-		lb.addItem("Wikigenes.com", WIKIGENES+"");
-		lb.addItem("View3","2");
-		lb.addItem("View4","3");
-		lb.addItem("View5","4");
-		
-		
+		for (int i=0; i<functions.size(); i++) {
+			lb.addItem(functions.get(i).getName(), i+"");
+		}
 	}
 
-	public Composite getView(int x, ArrayList<Gene> selectedGenes, Dataset dataset) {
-		switch(x) {
-		case HEATMAP:
-			return new Heatmap(selectedGenes, dataset);
-		case WIKIGENES:
-			return new WikiGenes(selectedGenes);
-		}
-		return null;
+	public Composite getView(int i, ArrayList<Gene> selectedGenes, Dataset dataset) {	
+		return new FunctionView(functions.get(i),selectedGenes,dataset);
 	}
 }
