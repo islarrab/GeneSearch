@@ -26,7 +26,7 @@ public class FunctionDictionary {
 	}
 	
 	/**
-	 * used to dynamically generate the functions in a list
+	 * used to dynamically generate the functions in a given list
 	 * @param lb the list to be populated with functions
 	 */
 	public void generateList(ListBox lb) {
