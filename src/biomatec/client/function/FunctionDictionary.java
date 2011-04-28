@@ -15,12 +15,12 @@ public class FunctionDictionary {
 	public FunctionDictionary() {
 		functions.add(new Function("Heatmap",
 				"http://biomatec.mty.itesm.mx:8080/Biomatec1/getRowData.jsp?dsk=<dsk>&unifeaturekey=<ufk>&format=text&type=%%Type%%",
-				"special",
+				's',
 				'M'));
 		
 		functions.add(new Function("Wikigenes.com",
 				"http://www.wikigenes.org/e/gene/e/<ufk>.html",
-				"none",
+				'w',
 				'S'));
 		
 	}
