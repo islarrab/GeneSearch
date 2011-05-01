@@ -1,3 +1,4 @@
+*.swp
 *.class
 war/genesearch/
 war/WEB-INF/classes
