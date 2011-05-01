@@ -4,17 +4,17 @@ public class Function {
 
 	private String name;
 	private String url;
-	private String returnType;
+	private char returnType;
 	private char functionType;
 	
 	public Function() {
 		setName("");
 		setUrl("");
-		setReturnType("");
+		setReturnType(' ');
 		setFunctionType('S');
 	}
 	
-	public Function(String name, String url, String returnType, char functionType) {
+	public Function(String name, String url, char returnType, char functionType) {
 		this.setName(name);
 		this.setUrl(url);
 		this.setReturnType(returnType);
@@ -52,14 +52,14 @@ public class Function {
 	/**
 	 * @param returnType the returnType to set
 	 */
-	public void setReturnType(String returnType) {
+	public void setReturnType(char returnType) {
 		this.returnType = returnType;
 	}
 
 	/**
 	 * @return the returnType
 	 */
-	public String getReturnType() {
+	public char getReturnType() {
 		return returnType;
 	}
 

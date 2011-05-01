@@ -51,10 +51,12 @@ public class GeneView extends Composite {
 		// Assemble the main panel header
 		panelHeader.add(infoPanel, DockPanel.WEST);
 		panelHeader.add(addViewPanel, DockPanel.EAST);
+		panelHeader.setCellHorizontalAlignment(addViewPanel, HorizontalPanel.ALIGN_RIGHT);
 		panelHeader.setWidth("1000px");
 		panelHeader.setStyleName("panelHeader");
 		
 		//Assemble the add view panel
+		addViewPanel.setSpacing(5);
 		addViewPanel.add(viewsListBox);
 		addViewPanel.add(addViewButton);
 		addViewPanel.setVerticalAlignment(VerticalPanel.ALIGN_BOTTOM);
@@ -95,7 +97,8 @@ public class GeneView extends Composite {
             else {
                 //genesLabel.setHTML(genesLabel.getHTML()+"<font color=\"red\">"+" "+selectedGenes.get(i).getSymbol()+"</font>");
                 genesCheck[i] = new CheckBox(selectedGenes.get(i).getSymbol());
-                genesCheck[i].setValue(false);
+                genesCheck[i].setEnabled(false);
+                genesCheck[i].setStyleName("disabled");
                 genesPanel.add(genesCheck[i]);
             }
         }
