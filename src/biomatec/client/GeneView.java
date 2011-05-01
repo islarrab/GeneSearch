@@ -34,6 +34,7 @@ public class GeneView extends Composite {
 	private Label errorLabel = new Label();
 	private ListBox viewsListBox = new ListBox();
 	private Button addViewButton = new Button("+ Add View");
+	private Button updateButton = new Button("Update");
 	
 	private FunctionDictionary fd = new FunctionDictionary();
 
@@ -104,6 +105,8 @@ public class GeneView extends Composite {
         }
         databaseLabel.setHTML("<b>Database:</b> "+dataset.getName());
 		infoPanel.add(databaseLabel);
+		genesPanel.add(updateButton);
+		genesPanel.setSpacing(5);
 
         // Assemble the functions list box
         fd.generateList(viewsListBox);
