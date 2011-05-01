@@ -89,8 +89,10 @@ public class FunctionView extends Composite {
 		ft.setText(0, 0, "GENE");
 		ft.getRowFormatter().setStyleName(0, "resultsTable-headerRow");
 		for(int i = 0; i < selectedGenes.size(); i++) {
-			ft.setText(i+1, 0, selectedGenes.get(i).getSymbol());
-			ft.getRowFormatter().setStyleName(i+1, "resultsTable-dataRow");
+			if (selectedGenes.get(i).getAvailable()){
+				ft.setText(i+1, 0, selectedGenes.get(i).getSymbol());
+				ft.getRowFormatter().setStyleName(i+1, "resultsTable-dataRow");
+			}
 		}
 		ft.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){

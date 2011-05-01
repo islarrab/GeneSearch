@@ -7,6 +7,7 @@ import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Gene;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -76,6 +77,7 @@ public class GeneView extends Composite {
             genesCheck[0] = new CheckBox(selectedGenes.get(0).getSymbol());
             genesCheck[0].setValue(true);
             genesPanel.add(genesCheck[0]);
+            selectedGenes.get(0).setAvailable(true);
         }
             
 		else {
@@ -83,6 +85,7 @@ public class GeneView extends Composite {
             genesCheck[0] = new CheckBox(selectedGenes.get(0).getSymbol());
             genesCheck[0].setValue(false);
             genesPanel.add(genesCheck[0]);
+            selectedGenes.get(0).setAvailable(false);
         }
 		for (int i=1; i<selectedGenes.size(); i++) {
 			found = false;
@@ -94,6 +97,7 @@ public class GeneView extends Composite {
                 genesCheck[i] = new CheckBox(selectedGenes.get(i).getSymbol());
                 genesCheck[i].setValue(true);
                 genesPanel.add(genesCheck[i]);
+                selectedGenes.get(i).setAvailable(true);
             }
             else {
                 //genesLabel.setHTML(genesLabel.getHTML()+"<font color=\"red\">"+" "+selectedGenes.get(i).getSymbol()+"</font>");
@@ -101,6 +105,7 @@ public class GeneView extends Composite {
                 genesCheck[i].setEnabled(false);
                 genesCheck[i].setStyleName("disabled");
                 genesPanel.add(genesCheck[i]);
+                selectedGenes.get(i).setAvailable(false);
             }
         }
         databaseLabel.setHTML("<b>Database:</b> "+dataset.getName());
@@ -114,9 +119,17 @@ public class GeneView extends Composite {
         addViewButton.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 int x = Integer.parseInt(viewsListBox.getValue(viewsListBox.getSelectedIndex()));
+                for(int i = 0; i < selectedGenes.size(); i++)
+                	selectedGenes.get(i).setAvailable(genesCheck[i].getValue());
                 viewsPanel.add(fd.getView(x, selectedGenes, dataset));
 
             }
+        });
+        
+        updateButton.addClickHandler(new ClickHandler() {
+        	public void onClick(ClickEvent event) {
+        		Window.alert("Gabriel es puto y se la come");
+        	}
         });
 
         this.initWidget(mainPanel);

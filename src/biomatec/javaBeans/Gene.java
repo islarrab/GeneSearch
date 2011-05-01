@@ -25,6 +25,7 @@ public class Gene implements Serializable{
 		all_known_ids = "";
 		organism = "";
 		annotation = "";
+		available = false;
 	}
    
    /*Gets*/
