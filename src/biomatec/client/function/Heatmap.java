@@ -86,7 +86,7 @@ public class Heatmap extends Composite {
 				HorizontalPanel section = new HorizontalPanel();
 				section.setBorderWidth(0);
 				section.setSize("4px", "20px");
-
+				
 				double x = results.get(i).get(j).getDouble();
 				if(x >= 0 && x < .1)
 					section.setStyleName("heatmap0");
