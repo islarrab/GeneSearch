@@ -217,6 +217,7 @@ public class GeneSearch implements EntryPoint{
 						dataset.setName(datasetsTable.getText(row, 1));
 						dataset.setDescription(datasetsTable.getText(row, 2));
 						dataset.setGenes(datasetsTable.getText(row, 3));
+						//TODO Mandar a llamar a dataset.setColumnsType(geneSearchSvc.columnsType(datasetKey));
 						RootPanel.get("yield").clear();
 						RootPanel.get("yield").add(new GeneView(selectedGenes, dataset));
 					}

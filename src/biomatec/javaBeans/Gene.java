@@ -15,6 +15,7 @@ public class Gene implements Serializable{
 	private String all_known_ids;
 	private String organism;
 	private String annotation;
+    private boolean available;
    
    /*Constructors*/
 	public Gene(){
@@ -24,6 +25,7 @@ public class Gene implements Serializable{
 		all_known_ids = "";
 		organism = "";
 		annotation = "";
+		available = false;
 	}
    
    /*Gets*/
@@ -50,6 +52,10 @@ public class Gene implements Serializable{
 	public String getAnnotation (){
 		return annotation;
 	}
+
+    public boolean getAvailable () {
+        return this.available;
+    }
 	
    /*Sets*/
 	public void setUnifeatureKey (int unifeature_key){
@@ -80,5 +86,9 @@ public class Gene implements Serializable{
 	public void setAnnotation (String annotation){
 		this.annotation = annotation;
 	}
+
+    public void setAvailable (boolean available){
+        this.available = available;
+    }
       
 }

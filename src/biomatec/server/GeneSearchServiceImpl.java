@@ -155,5 +155,22 @@ GeneSearchService {
 
 	}
 
+	public String columnsType(int datasetKey)throws IOException{
+		String s = "";
+		init();
+		try{
+			String query = 
+				"SELECT COLUMNS_TYPE " +
+				"FROM DATA_MATRIX " +
+				"WHERE DATA_SET_KEY = " + datasetKey;
+			ResultSet rs = statement.executeQuery(query);
+			rs.next();
+			s = rs.getString(0);
+		} catch(Exception e){
+			System.err.println("ERROR: Problems with the database");
+			e.printStackTrace();
+		}
+		return s;
+	}
 	
 }

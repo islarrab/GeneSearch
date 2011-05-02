@@ -18,5 +18,6 @@ public interface GeneSearchService extends RemoteService {
 	ArrayList<Gene> geneSearch(String gene) throws IllegalArgumentException;
 	ArrayList<Dataset> geneDetailSearch(ArrayList<Gene> input) throws IllegalArgumentException;
 	ArrayList<ArrayList<Double>> generateHeatMap(ArrayList<Gene> genes, Dataset dataset) throws IOException;
+	String columnsType(int datasetKey) throws IOException;
 }
 
