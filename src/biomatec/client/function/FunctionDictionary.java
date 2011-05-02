@@ -35,7 +35,7 @@ public class FunctionDictionary {
 		}
 	}
 
-	public Composite getView(int i, ArrayList<Gene> selectedGenes, Dataset dataset) {	
+	public FunctionView getView(int i, ArrayList<Gene> selectedGenes, Dataset dataset) {	
 		return new FunctionView(functions.get(i),selectedGenes,dataset);
 	}
 }

@@ -29,6 +29,10 @@ public class FunctionView extends Composite {
 	private HTML h = new HTML();
 	private CheckBox sync = new CheckBox("SYNC");
 	private Button remove = new Button("Remove");
+	private char type;
+	
+	public FunctionView(){
+	}
 	
 	public FunctionView(Function f, ArrayList<Gene> sg, Dataset ds) {
 		this.function = f;
@@ -47,10 +51,11 @@ public class FunctionView extends Composite {
 				removeFromParent();
 			}
 		});
-		if (function.getFunctionType() == 'S'){
+		type = function.getFunctionType();
+		if (type == 'S'){
 			addSingleGeneView();
 		}
-		else if (function.getFunctionType() == 'M'){
+		else if (type == 'M'){
 			parseURL();
 		}
 		
@@ -114,7 +119,23 @@ public class FunctionView extends Composite {
 		});
 	}
 	
+	public void updateFlexTable(){
+		ft.removeAllRows();
+		ft.setText(0, 0, "GENE");
+		ft.getRowFormatter().setStyleName(0, "resultsTable-headerRow");
+		for(int i = 0; i < selectedGenes.size(); i++) {
+			if (selectedGenes.get(i).getAvailable()){
+				ft.setText(i+1, 0, selectedGenes.get(i).getSymbol());
+				ft.getRowFormatter().setStyleName(i+1, "resultsTable-dataRow");
+			}
+		}
+	}
+	
 	public boolean getSYNCValue(){
 		return sync.getValue();
+	}
+	
+	public char getType(){
+		return type;
 	}
 }

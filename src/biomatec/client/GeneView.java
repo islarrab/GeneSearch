@@ -3,6 +3,7 @@ package biomatec.client;
 import java.util.ArrayList;
 
 import biomatec.client.function.FunctionDictionary;
+import biomatec.client.function.FunctionView;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Gene;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -122,13 +123,24 @@ public class GeneView extends Composite {
                 for(int i = 0; i < selectedGenes.size(); i++)
                 	selectedGenes.get(i).setAvailable(genesCheck[i].getValue());
                 viewsPanel.add(fd.getView(x, selectedGenes, dataset));
-
             }
         });
         
         updateButton.addClickHandler(new ClickHandler() {
         	public void onClick(ClickEvent event) {
-        		Window.alert("Gabriel es puto y se la come");
+        		for(int i = 0; i < selectedGenes.size(); i++)
+                	selectedGenes.get(i).setAvailable(genesCheck[i].getValue());
+        		for(int i = 0; i < viewsPanel.getWidgetCount(); i++){
+        			FunctionView f = (FunctionView) viewsPanel.getWidget(i);
+        			if (f.getSYNCValue()){
+        				if(f.getType() == 'S'){
+        					f.updateFlexTable();
+        				}
+        				else{
+        					
+        				}
+        			}
+        		}
         	}
         });
 
