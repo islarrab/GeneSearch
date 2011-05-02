@@ -14,12 +14,14 @@ public class Dataset implements Serializable{
 	private String name;
 	private String description;
 	private String genes;
+	private String columns_type;
    
    /*Constructors*/
 	public Dataset(){
 		name = "";
 		description = "";
 		genes = "";
+		columns_type = "";
 	}
    
    /*Gets*/
@@ -39,6 +41,10 @@ public class Dataset implements Serializable{
 		return genes;
 	}
 
+	public String getColumnsType(){
+		return columns_type;
+	}
+
 	
    /*Sets*/
 	public void setDatasetKey (int newValue){
@@ -55,6 +61,10 @@ public class Dataset implements Serializable{
 	
 	public void setGenes (String newValue){
 		this.genes = newValue;
+	}
+	
+	public void setColumnsType (String newValue){
+		this.columns_type = newValue;
 	}
 	
 	public void addGene (String gene){

@@ -18,4 +18,6 @@ public interface GeneSearchServiceAsync {
 		throws IllegalArgumentException;
 	void generateHeatMap(ArrayList<Gene> selectedGenes, Dataset dataset, AsyncCallback<ArrayList<ArrayList<Double>>> callback)
 		throws IOException;
+	void columnsType(int datasetKey, AsyncCallback<String> callback)
+		throws IOException;
 }
