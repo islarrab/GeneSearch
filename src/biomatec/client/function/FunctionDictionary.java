@@ -3,6 +3,7 @@ package biomatec.client.function;
 import java.util.ArrayList;
 
 import biomatec.javaBeans.Dataset;
+import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 
 import com.google.gwt.user.client.ui.Composite;

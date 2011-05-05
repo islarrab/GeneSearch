@@ -3,6 +3,7 @@ package biomatec.client.function;
 import java.util.ArrayList;
 
 import biomatec.javaBeans.Dataset;
+import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -12,6 +13,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -22,11 +24,11 @@ public class FunctionView extends Composite {
 	private ArrayList<Gene> selectedGenes;
 	private Dataset dataset;
 	private ArrayList<String> parameterNames;
-	private String parsedUrl;
-	private String reparsedUrl = null; // the String that will contain values of the parameters 
+	private String parsedUrl = null; // String parsed for common parameters (ufk, dsk, etc.)
+	private String reparsedUrl = null; // String parsed from 'parsedUrl' for captured parameters 
 	private HorizontalPanel panel = new HorizontalPanel();
 	private FlexTable ft = new FlexTable();
-	private FlexTable paramsTable = new FlexTable(); // used only for MultiGene functions
+	private FlexTable sidebar = new FlexTable(); // the left sidebar that contains genes or parameters 
 	private VerticalPanel vp = new VerticalPanel();
 	private VerticalPanel vp2 = new VerticalPanel();
 	private HTML h = new HTML();
@@ -34,9 +36,9 @@ public class FunctionView extends Composite {
 	private Button remove = new Button("Remove");
 
 	private char type;
-	
+
 	public FunctionView(){}
-	
+
 	public FunctionView(Function f, ArrayList<Gene> sg, Dataset ds) {
 		this.function = f;
 		this.selectedGenes = sg;
@@ -91,7 +93,7 @@ public class FunctionView extends Composite {
 		}
 
 		this.parsedUrl = newUrl;
-		
+
 	}
 
 	private void generateParametersArray() {
@@ -100,7 +102,7 @@ public class FunctionView extends Composite {
 		int pos1, pos2;
 		pos1 = 0;
 		pos2 = 0;
-		
+
 		while (pos1 >= 0) {
 			pos1 = newUrl.indexOf("%%", pos2+2);
 			pos2 = newUrl.indexOf("%%", pos1+2);
@@ -142,39 +144,48 @@ public class FunctionView extends Composite {
 	private void addMultiGeneView() {
 		generateParametersArray();
 		Button go = new Button("Go");
-		
+
 		int i;
 		for (i=0; i<parameterNames.size(); i++) {
-			paramsTable.setText(i, 0, parameterNames.get(i));
-			paramsTable.setWidget(i, 1, new TextBox());
+			sidebar.setText(i, 0, parameterNames.get(i));
+			sidebar.setWidget(i, 1, new TextBox());
 		}
-		paramsTable.setWidget(i, 1, go);
-		
-		ft.setWidget(0, 0, paramsTable);
-		
+		sidebar.setWidget(i, 1, go);
+
+		ft.setWidget(0, 0, sidebar);
+
 		// Click handler for the go button
 		go.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-            	parseUrlForParameters();
-            	ft.setHTML(0, 1, "<img src=\"Images/heatmap.png\">");
-            	//ft.setHTML(0, 1, "<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");
-            }
-        });
-		
+			public void onClick(ClickEvent event) {
+				parseUrlForParameters();
+				/*
+				switch(function.getReturnType()) {
+				case 'I':
+					Image image = new Image(reparsedUrl);
+					ft.setWidget(0, 1, image);
+					break;
+				}
+				*/
+				Image image = new Image("Images/heatmap.png");
+				vp2.add(image);
+				//ft.setHTML(0, 1, "<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");
+			}
+		});
+
 	}
-	
+
 	private void parseUrlForParameters() {
 		String newUrl = parsedUrl;
-		for (int i=0; i<paramsTable.getRowCount()-1; i++) {
-			String name = paramsTable.getText(i, 0);
-			TextBox tb = (TextBox)paramsTable.getWidget(i, 1);
+		for (int i=0; i<sidebar.getRowCount()-1; i++) {
+			String name = sidebar.getText(i, 0);
+			TextBox tb = (TextBox)sidebar.getWidget(i, 1);
 			String value = tb.getValue();
-			
+
 			newUrl = newUrl.replace("%%"+name+"%%", value);
 		}
 		reparsedUrl = newUrl;
 	}
-	
+
 	public void updateFlexTable(){
 		ft.removeAllRows();
 		ft.setText(0, 0, "GENE");
@@ -186,11 +197,11 @@ public class FunctionView extends Composite {
 			}
 		}
 	}
-	
+
 	public boolean getSYNCValue(){
 		return sync.getValue();
 	}
-	
+
 	public char getType(){
 		return type;
 	}

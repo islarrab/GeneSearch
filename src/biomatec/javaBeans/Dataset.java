@@ -23,6 +23,15 @@ public class Dataset implements Serializable{
 		genes = "";
 		columns_type = "";
 	}
+	
+	public Dataset(String name, String description, String genes, String columns_type){
+		this.name = name;
+		this.description = description;
+		this.genes = genes;
+		this.columns_type = columns_type;
+	}
+	
+	
    
    /*Gets*/
 	public int getDatasetKey(){

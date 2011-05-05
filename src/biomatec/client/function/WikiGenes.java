@@ -19,7 +19,7 @@ public class WikiGenes extends Composite{
 	
 		
 	public WikiGenes(final ArrayList<Gene> selectedGenes){
-				
+		
 		//Compose the view
 		wikiGenePanel.add(genes);
 		wikiGenePanel.add(wikiGeneDetail);

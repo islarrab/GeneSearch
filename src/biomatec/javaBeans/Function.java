@@ -1,10 +1,10 @@
-package biomatec.client.function;
+package biomatec.javaBeans;
 
 public class Function {
 
 	private String name;
 	private String url;
-	private char returnType;
+	private char returnType; 
 	private char functionType;
 	
 	public Function() {

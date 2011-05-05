@@ -38,7 +38,7 @@ public class GeneView extends Composite {
 	private Button addViewButton = new Button("+ Add View");
 	private Button updateButton = new Button("Update");
 	
-	private FunctionDictionary fd = new FunctionDictionary();
+	private FunctionDictionary functionDictionary = new FunctionDictionary();
 
     private CheckBox genesCheck[];
 
@@ -115,14 +115,14 @@ public class GeneView extends Composite {
 		genesPanel.setSpacing(5);
 
         // Assemble the functions list box
-        fd.generateList(viewsListBox);
+        functionDictionary.generateList(viewsListBox);
 
         addViewButton.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 int x = Integer.parseInt(viewsListBox.getValue(viewsListBox.getSelectedIndex()));
                 for(int i = 0; i < selectedGenes.size(); i++)
                 	selectedGenes.get(i).setAvailable(genesCheck[i].getValue());
-                viewsPanel.add(fd.getView(x, selectedGenes, dataset));
+                viewsPanel.add(functionDictionary.getView(x, selectedGenes, dataset));
             }
         });
         

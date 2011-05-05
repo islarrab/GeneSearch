@@ -18,10 +18,20 @@ public class Gene implements Serializable{
     private boolean available;
    
    /*Constructors*/
-	public Gene(){
+    public Gene(){
 		unifeature_key = 0;
 		feature_type_key = 0;
 		symbol = "";
+		all_known_ids = "";
+		organism = "";
+		annotation = "";
+		available = false;
+	}
+    
+    public Gene(int ufk, int ftk, String name){
+		unifeature_key = ufk;
+		feature_type_key = ftk;
+		symbol = name;
 		all_known_ids = "";
 		organism = "";
 		annotation = "";

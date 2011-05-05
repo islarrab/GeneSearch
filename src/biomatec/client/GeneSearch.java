@@ -112,7 +112,7 @@ public class GeneSearch implements EntryPoint{
 
 		// We can add style names to widgets
 		searchButton.addStyleName("sendButton");
-
+		
 		// Attach RootPanel to div "yield"
 		RootPanel.get("yield").add(mainPanel);
 		
