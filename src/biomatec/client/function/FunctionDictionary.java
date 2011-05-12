@@ -14,16 +14,18 @@ public class FunctionDictionary {
 	private ArrayList<Function> functions = new ArrayList<Function>();
 	
 	public FunctionDictionary() {
+		// TODO el arreglo "functions" debe popularse extrayendo la informacion de la base de datos
 		functions.add(new Function("Heatmap",
 				"http://biomatec.mty.itesm.mx:8080/Biomatec1/getRowData.jsp?dsk=<dsk>&unifeaturekey=<ufk>&format=text&type=%%Type%%",
-				's',
+				'I', // I = Image
 				'M'));
 		
 		functions.add(new Function("Wikigenes.com",
 				"http://www.wikigenes.org/e/gene/e/<ufk>.html",
-				'w',
+				'H', // H = HTML
 				'S'));
 		
+		// TODO algo
 	}
 	
 	/**

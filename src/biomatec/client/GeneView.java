@@ -8,7 +8,6 @@ import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Gene;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -131,13 +130,13 @@ public class GeneView extends Composite {
         		for(int i = 0; i < selectedGenes.size(); i++)
                 	selectedGenes.get(i).setAvailable(genesCheck[i].getValue());
         		for(int i = 0; i < viewsPanel.getWidgetCount(); i++){
-        			FunctionView f = (FunctionView) viewsPanel.getWidget(i);
-        			if (f.getSYNCValue()){
-        				if(f.getType() == 'S'){
-        					f.updateFlexTable();
+        			FunctionView fv = (FunctionView) viewsPanel.getWidget(i);
+        			if (fv.getSYNCValue()){
+        				if(fv.getType() == 'S'){
+        					fv.updateFlexTable();
         				}
         				else{
-        					
+        					// TODO ?
         				}
         			}
         		}

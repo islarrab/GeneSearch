@@ -1,7 +1,18 @@
 package biomatec.javaBeans;
 
-public class Function {
+import java.io.Serializable;
 
+public class Function implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Accepted values for <code>returnType</code>
+	 * I = Image
+	 * H = HTML
+	 * Anything else will be treated as HTML
+	 */
+	
 	private String name;
 	private String url;
 	private char returnType; 

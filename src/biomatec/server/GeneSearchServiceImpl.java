@@ -166,6 +166,7 @@ GeneSearchService {
 			ResultSet rs = statement.executeQuery(query);
 			rs.next();
 			s = rs.getString(0);
+			connection.close();
 		} catch(Exception e){
 			System.err.println("ERROR: Problems with the database");
 			e.printStackTrace();

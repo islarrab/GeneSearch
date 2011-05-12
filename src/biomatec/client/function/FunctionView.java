@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -129,7 +130,7 @@ public class FunctionView extends Composite {
 					String url = function.getUrl();
 					url = url.replace("<ufk>", unifeatureKey+"");
 					switch(function.getReturnType()){
-					case 'w': 
+					case 'H': 
 						//TODO el resto de los return types para single gene
 						h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+url+"\"></iframe>");
 						vp2.add(h);
@@ -157,18 +158,37 @@ public class FunctionView extends Composite {
 		// Click handler for the go button
 		go.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				vp2.clear();
+				vp2.add(remove);
+				vp2.setCellHorizontalAlignment(remove, VerticalPanel.ALIGN_RIGHT);
 				parseUrlForParameters();
-				/*
 				switch(function.getReturnType()) {
+				// TODO el resto de los return types para multiGene
 				case 'I':
-					Image image = new Image(reparsedUrl);
-					ft.setWidget(0, 1, image);
+					//Image image = new Image(reparsedUrl);
+					// TODO reemplazar el ciclo por la linea de arriba cuando el webservice funcione
+					for (int i=0; i<selectedGenes.size(); i++) {
+						if (selectedGenes.get(i).getAvailable()) {
+							HorizontalPanel hp = new HorizontalPanel();
+							Label name = new Label(selectedGenes.get(i).getSymbol());
+							Image image = new Image("Images/heatmap.png");
+							
+							hp.add(name);
+							hp.add(image);
+							
+							vp2.add(hp);
+						}
+					}
+					break;
+				case 'H':
+					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");
+					vp2.add(h);
+					break;
+				default:
+					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");
+					vp2.add(h);
 					break;
 				}
-				*/
-				Image image = new Image("Images/heatmap.png");
-				vp2.add(image);
-				//ft.setHTML(0, 1, "<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");
 			}
 		});
 
