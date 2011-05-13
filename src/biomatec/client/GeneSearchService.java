@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import biomatec.javaBeans.Dataset;
+import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 import biomatec.javaBeans.Double;
 
@@ -19,5 +20,6 @@ public interface GeneSearchService extends RemoteService {
 	ArrayList<Dataset> geneDetailSearch(ArrayList<Gene> input) throws IllegalArgumentException;
 	ArrayList<ArrayList<Double>> generateHeatMap(ArrayList<Gene> genes, Dataset dataset) throws IOException;
 	String columnsType(int datasetKey) throws IOException;
+	ArrayList<Function> functions() throws IOException;
 }
 

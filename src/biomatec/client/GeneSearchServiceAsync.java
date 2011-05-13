@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import biomatec.javaBeans.Dataset;
+import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 import biomatec.javaBeans.Double;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -19,5 +20,7 @@ public interface GeneSearchServiceAsync {
 	void generateHeatMap(ArrayList<Gene> selectedGenes, Dataset dataset, AsyncCallback<ArrayList<ArrayList<Double>>> callback)
 		throws IOException;
 	void columnsType(int datasetKey, AsyncCallback<String> callback)
+		throws IOException;
+	void functions(AsyncCallback<ArrayList<Function>> callback)
 		throws IOException;
 }

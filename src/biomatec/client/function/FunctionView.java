@@ -69,7 +69,7 @@ public class FunctionView extends Composite {
 
 		//Format the widget
 		ft.setWidth("150px");
-		panel.setSize("1000px", "500px");
+		panel.setWidth("1000px");
 		vp2.setWidth("805px");
 		vp2.setCellHorizontalAlignment(remove, VerticalPanel.ALIGN_RIGHT);
 
@@ -130,8 +130,8 @@ public class FunctionView extends Composite {
 					String url = function.getUrl();
 					url = url.replace("<ufk>", unifeatureKey+"");
 					switch(function.getReturnType()){
+					//TODO el resto de los return types para single gene
 					case 'H': 
-						//TODO el resto de los return types para single gene
 						h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+url+"\"></iframe>");
 						vp2.add(h);
 						break;
@@ -148,8 +148,10 @@ public class FunctionView extends Composite {
 
 		int i;
 		for (i=0; i<parameterNames.size(); i++) {
+			TextBox tb = new TextBox();
+			tb.setVisibleLength(10);
 			sidebar.setText(i, 0, parameterNames.get(i));
-			sidebar.setWidget(i, 1, new TextBox());
+			sidebar.setWidget(i, 1, tb);
 		}
 		sidebar.setWidget(i, 1, go);
 
