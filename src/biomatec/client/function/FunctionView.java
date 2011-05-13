@@ -8,6 +8,7 @@ import biomatec.client.GeneSearchServiceAsync;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
+import biomatec.javaBeans.SelectedGenesData;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -38,6 +39,7 @@ public class FunctionView extends Composite {
 	private Function function;
 	private ArrayList<Gene> selectedGenes;
 	private Dataset dataset;
+	private SelectedGenesData selectedGenesData;
 	private ArrayList<String> parameterNames;
 	private String parsedUrl = null; // String parsed for common parameters (ufk, dsk, etc.)
 	private String reparsedUrl = null; // String parsed from 'parsedUrl' for captured parameters 
@@ -56,10 +58,11 @@ public class FunctionView extends Composite {
 
 	public FunctionView(){}
 
-	public FunctionView(Function f, ArrayList<Gene> sg, Dataset ds) {
+	public FunctionView(Function f, ArrayList<Gene> sg, Dataset ds, SelectedGenesData selectedGenesData) {
 		this.function = f;
 		this.selectedGenes = sg;
 		this.dataset = ds;
+		this.selectedGenesData = selectedGenesData;
 		this.parameterNames = new ArrayList<String>();
 		sync.setValue(true);
 
@@ -97,18 +100,11 @@ public class FunctionView extends Composite {
 	private void parseURL() {
 		String newUrl = function.getUrl();
 
-		//Parse for dataset key
-		newUrl = newUrl.replace("<dsk>", dataset.getDatasetKey()+"");
-		//Parse for unifeature keys
-		String ufk = "";
-		if (function.getFunctionType() == 'M') {
-			ufk = selectedGenes.get(0).getUnifeatureKey()+"";
-			for (int i=1; i<selectedGenes.size(); i++) {
-				ufk += "+" + selectedGenes.get(i).getUnifeatureKey();
-			}
-			newUrl = newUrl.replace("<ufk>", ufk);
-		}
-
+		//Parse for data
+		newUrl = newUrl.replace("<data>", selectedGenesData.getData());
+		//Parse for columns type
+		newUrl = newUrl.replace("<columns>", selectedGenesData.getColumnsType());
+		
 		this.parsedUrl = newUrl;
 
 	}
@@ -206,58 +202,9 @@ public class FunctionView extends Composite {
 					}
 					break;
 				case 'H':
+					System.out.println(reparsedUrl);
 					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");
 					vp2.add(h);
-					break;
-				case 'S':
-					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");
-					vp2.add(h);
-					/*
-					try {
-						for (int i=0; i<selectedGenes.size(); i++) {
-							final int index = i;
-							String path = "";
-							path = function.getUrl();
-							path = path.replace("&type=%%Type%%", "");
-							path = path.replace("<dsk>", dataset.getDatasetKey()+"");
-							path = path.replace("<ufk>", selectedGenes.get(i).getUnifeatureKey()+"");
-							path = path.replace("text", "json");
-							new RequestBuilder(RequestBuilder.GET, path).sendRequest("", new RequestCallback() {
-								@Override
-								public void onResponseReceived(Request req, Response resp) {
-									HorizontalPanel hp = new HorizontalPanel();
-									Label name = new Label(selectedGenes.get(index).getSymbol());
-									String text = resp.getText();
-
-									String textArray[] = text.split("\t");
-									int beginning = dataset.getColumnsType().indexOf("D");
-									int end = dataset.getColumnsType().lastIndexOf("D");
-									double values[] = new double[end-beginning+1];
-
-									for (int j=0; beginning+j<=end; j++) {
-										values[j] = Double.parseDouble(textArray[beginning+j]);
-									}
-
-									Heatmap heatmap = new Heatmap(values);
-									hp.add(name);
-									hp.add(heatmap);
-									vp2.add(hp);
-
-								}
-
-								@Override
-								public void onError(Request res, Throwable throwable) {
-									// TODO handle errors
-								}
-							});
-
-						}
-
-					} catch (RequestException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					*/
 					break;
 				default:
 					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");

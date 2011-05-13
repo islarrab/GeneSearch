@@ -7,6 +7,7 @@ import biomatec.client.GeneSearchServiceAsync;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
+import biomatec.javaBeans.SelectedGenesData;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.History;
@@ -37,8 +38,8 @@ public class FunctionDictionary {
 		}
 	}
 
-	public FunctionView getView(int i, ArrayList<Gene> selectedGenes, Dataset dataset) {	
-		return new FunctionView(functions.get(i),selectedGenes,dataset);
+	public FunctionView getView(int i, ArrayList<Gene> selectedGenes, Dataset dataset, SelectedGenesData selectedGenesData) {	
+		return new FunctionView(functions.get(i),selectedGenes,dataset, selectedGenesData);
 	}
 	
 

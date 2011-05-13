@@ -2,19 +2,19 @@ package biomatec.javaBeans;
 
 public class SelectedGenesData {
 	
-	private String[][] data;
+	private String data;
 	private String columnsType;
 	
 	/**
 	 * @param data the data to set
 	 */
-	public void setData(String[][] data) {
+	public void setData(String data) {
 		this.data = data;
 	}
 	/**
 	 * @return the data
 	 */
-	public String[][] getData() {
+	public String getData() {
 		return data;
 	}
 	/**

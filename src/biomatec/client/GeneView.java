@@ -41,13 +41,11 @@ public class GeneView extends Composite {
 	private Button updateButton = new Button("Update");
 	
 	private FunctionDictionary functionDictionary;
-	private SelectedGenesData selectedGenesData;
 	
     private CheckBox genesCheck[];
 
-	public GeneView(final ArrayList<Gene> selectedGenes, final Dataset dataset, final ArrayList<Function> functions, SelectedGenesData selectedGenesData) {
+	public GeneView(final ArrayList<Gene> selectedGenes, final Dataset dataset, final ArrayList<Function> functions, final SelectedGenesData selectedGenesData) {
 		functionDictionary = new FunctionDictionary(functions);
-		this.selectedGenesData = selectedGenesData;
         genesCheck = new CheckBox[selectedGenes.size()];
 
 		// Assemble main panel
@@ -126,7 +124,7 @@ public class GeneView extends Composite {
                 int x = Integer.parseInt(viewsListBox.getValue(viewsListBox.getSelectedIndex()));
                 for(int i = 0; i < selectedGenes.size(); i++)
                 	selectedGenes.get(i).setAvailable(genesCheck[i].getValue());
-                viewsPanel.add(functionDictionary.getView(x, selectedGenes, dataset));
+                viewsPanel.add(functionDictionary.getView(x, selectedGenes, dataset, selectedGenesData));
             }
         });
         
@@ -147,8 +145,7 @@ public class GeneView extends Composite {
         		}
         	}
         });
-
+        
         this.initWidget(mainPanel);
     }
-
 }
