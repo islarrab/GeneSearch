@@ -70,7 +70,7 @@ public class FunctionView extends Composite {
 		//Format the widget
 		ft.setWidth("150px");
 		panel.setWidth("1000px");
-		vp2.setWidth("805px");
+		vp2.setWidth("800px");
 		vp2.setCellHorizontalAlignment(remove, VerticalPanel.ALIGN_RIGHT);
 
 		//Initialize the widget
@@ -131,11 +131,18 @@ public class FunctionView extends Composite {
 					url = url.replace("<ufk>", unifeatureKey+"");
 					switch(function.getReturnType()){
 					//TODO el resto de los return types para single gene
+					case 'I':
+						h.setHTML("<img height=\"500px\" width=\"800px\" src=\""+url+"\"></iframe>");
+						vp2.add(h);
+						break;
 					case 'H': 
 						h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+url+"\"></iframe>");
 						vp2.add(h);
 						break;
-					default: break;
+					default: 
+						h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+url+"\"></iframe>");
+						vp2.add(h);
+						break;
 					}
 				}
 			}
