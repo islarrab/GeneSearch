@@ -17,19 +17,22 @@ public class Function implements Serializable{
 	private String url;
 	private char returnType; 
 	private char functionType;
+	private char method;
 	
 	public Function() {
 		setName("");
 		setUrl("");
 		setReturnType(' ');
 		setFunctionType('S');
+		setMethod('G');
 	}
 	
-	public Function(String name, String url, char returnType, char functionType) {
+	public Function(String name, String url, char returnType, char functionType, char method) {
 		this.setName(name);
 		this.setUrl(url);
 		this.setReturnType(returnType);
 		this.setFunctionType(functionType);
+		this.setMethod(method);
 	}
 
 	/**
@@ -59,6 +62,13 @@ public class Function implements Serializable{
 	public String getUrl() {
 		return url;
 	}
+	
+	/**
+	 * @return the url
+	 */
+	public char getMethod() {
+		return method;
+	}
 
 	/**
 	 * @param returnType the returnType to set
@@ -86,6 +96,13 @@ public class Function implements Serializable{
 	 */
 	public char getFunctionType() {
 		return functionType;
+	}
+	
+	/**
+	 * @return the url
+	 */
+	public void setMethod(char method) {
+		this.method = method;
 	}
 	
 }
