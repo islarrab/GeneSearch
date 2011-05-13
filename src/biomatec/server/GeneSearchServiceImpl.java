@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import biomatec.client.GeneSearchService;
 import biomatec.client.function.Heatmap;
 import biomatec.javaBeans.Dataset;
+import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 import biomatec.javaBeans.Double;
 
@@ -163,8 +164,9 @@ GeneSearchService {
 		return results;
 
 	}
-
-	public String columnsType(int datasetKey)throws IOException{
+	
+	@Override
+	public String columnsType(int datasetKey) throws IOException{
 		String s = "";
 		init();
 		try{
@@ -183,36 +185,28 @@ GeneSearchService {
 		return s;
 	}
 
-	private String text;
-	public String getText(String url) throws IOException {
-		try {
-			RequestBuilder request = new RequestBuilder(RequestBuilder.GET, url);
-			RequestCallback callback = new RequestCallback() {
-				@Override
-				public void onResponseReceived(Request req, Response resp) {
-					text = resp.getText();
-					this.notify();
-				}
-
-				@Override
-				public void onError(Request res, Throwable throwable) {
-					// TODO handle errors
-					text = "";
-					this.notify();
-				}
-			};
-			request.sendRequest("", callback);
-			callback.wait();
-			return text;
-		} catch (RequestException e) {
-			// TODO Auto-generated catch block
+	@Override
+	public ArrayList<Function> functions() throws IOException{
+		ArrayList<Function> functionArray = new ArrayList<Function>();
+		init();
+		try{
+			String query = 
+				"SELECT NAME, URL, RETURN_TYPE, MULTI_GENE " +
+				"FROM VIEWER_SERVICES ";
+			ResultSet rs = statement.executeQuery(query);
+			while(rs.next()){
+				String name = rs.getString("NAME");
+				String url = rs.getString("URL");
+				char return_type = rs.getString("RETURN_TYPE").charAt(0);
+				char function_type = rs.getString("MULTI_GENE").charAt(0);
+				Function f = new Function(name, url, return_type, function_type);
+				functionArray.add(f);
+			}
+		} catch (Exception e){
+			System.err.println("ERROR: Problems with the database");
 			e.printStackTrace();
-			return null;
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
 		}
+		return functionArray;
 	}
-
+	
 }

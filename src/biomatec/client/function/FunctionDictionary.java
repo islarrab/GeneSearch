@@ -2,30 +2,29 @@ package biomatec.client.function;
 
 import java.util.ArrayList;
 
+import biomatec.client.GeneSearchService;
+import biomatec.client.GeneSearchServiceAsync;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 
 public class FunctionDictionary {
 	
 	private ArrayList<Function> functions = new ArrayList<Function>();
+
+	/**
+	 * Create a remote service proxy to talk to the server-side gene search service.
+	 */
+	private GeneSearchServiceAsync geneSearchSvc = GWT.create(GeneSearchService.class);
 	
-	public FunctionDictionary() {
-		
-		// TODO el arreglo "functions" debe popularse extrayendo la informacion de la base de datos
-		functions.add(new Function("Heatmap",
-				"http://biomatec.mty.itesm.mx:8080/Biomatec1/getRowData.jsp?dsk=<dsk>&unifeaturekey=<ufk>&format=text&type=%%Type%%",
-				'S', // S = Special (Heatmap)
-				'M'));
-		
-		functions.add(new Function("Wikigenes.com",
-				"http://www.wikigenes.org/e/gene/e/<ufk>.html",
-				'H', // H = HTML
-				'S'));
-		
-		
+	public FunctionDictionary(ArrayList<Function> functions) {
+		this.functions = functions;
 	}
 	
 	/**
@@ -33,7 +32,7 @@ public class FunctionDictionary {
 	 * @param lb the list to be populated with functions
 	 */
 	public void generateList(ListBox lb) {
-		for (int i=0; i<functions.size(); i++) {
+		for (int i=0; i < functions.size(); i++) {
 			lb.addItem(functions.get(i).getName(), i+"");
 		}
 	}
@@ -41,4 +40,6 @@ public class FunctionDictionary {
 	public FunctionView getView(int i, ArrayList<Gene> selectedGenes, Dataset dataset) {	
 		return new FunctionView(functions.get(i),selectedGenes,dataset);
 	}
+	
+
 }

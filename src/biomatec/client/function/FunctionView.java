@@ -83,8 +83,8 @@ public class FunctionView extends Composite {
 
 		//Format the widget
 		ft.setWidth("150px");
-		panel.setSize("1000px", "500px");
-		vp2.setWidth("805px");
+		panel.setWidth("1000px");
+		vp2.setWidth("800px");
 		vp2.setCellHorizontalAlignment(remove, VerticalPanel.ALIGN_RIGHT);
 
 		//Initialize the widget
@@ -144,12 +144,19 @@ public class FunctionView extends Composite {
 					String url = function.getUrl();
 					url = url.replace("<ufk>", unifeatureKey+"");
 					switch(function.getReturnType()){
+					//TODO el resto de los return types para single gene
+					case 'I':
+						h.setHTML("<img height=\"500px\" width=\"800px\" src=\""+url+"\"></iframe>");
+						vp2.add(h);
+						break;
 					case 'H': 
-						//TODO el resto de los return types para single gene
 						h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+url+"\"></iframe>");
 						vp2.add(h);
 						break;
-					default: break;
+					default: 
+						h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+url+"\"></iframe>");
+						vp2.add(h);
+						break;
 					}
 				}
 			}
@@ -162,8 +169,10 @@ public class FunctionView extends Composite {
 
 		int i;
 		for (i=0; i<parameterNames.size(); i++) {
+			TextBox tb = new TextBox();
+			tb.setVisibleLength(10);
 			sidebar.setText(i, 0, parameterNames.get(i));
-			sidebar.setWidget(i, 1, new TextBox());
+			sidebar.setWidget(i, 1, tb);
 		}
 		sidebar.setWidget(i, 1, go);
 
@@ -199,36 +208,8 @@ public class FunctionView extends Composite {
 					vp2.add(h);
 					break;
 				case 'S':
-					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\" id=\"heatmap\"></iframe>");
-
-
-					for (int i=0; i<selectedGenes.size(); i++) {
-						final int index = i;
-						String path = "";
-						path = function.getUrl();
-						path = path.replace("&type=%%Type%%", "");
-						path = path.replace("<dsk>", dataset.getDatasetKey()+"");
-						path = path.replace("<ufk>", selectedGenes.get(i).getUnifeatureKey()+"");
-
-						HorizontalPanel hp = new HorizontalPanel();
-						Label name = new Label(selectedGenes.get(index).getSymbol());
-						String text = getHeatmapText();
-
-						String textArray[] = text.split("\t");
-						int beginning = dataset.getColumnsType().indexOf("D");
-						int end = dataset.getColumnsType().lastIndexOf("D");
-						double values[] = new double[end-beginning+1];
-
-						for (int j=0; beginning+j<=end; j++) {
-							values[j] = Double.parseDouble(textArray[beginning+j]);
-						}
-
-						Heatmap heatmap = new Heatmap(values);
-						hp.add(name);
-						hp.add(heatmap);
-						vp2.add(hp);
-					}
-
+					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");
+					vp2.add(h);
 					/*
 					try {
 						for (int i=0; i<selectedGenes.size(); i++) {
@@ -238,6 +219,7 @@ public class FunctionView extends Composite {
 							path = path.replace("&type=%%Type%%", "");
 							path = path.replace("<dsk>", dataset.getDatasetKey()+"");
 							path = path.replace("<ufk>", selectedGenes.get(i).getUnifeatureKey()+"");
+							path = path.replace("text", "json");
 							new RequestBuilder(RequestBuilder.GET, path).sendRequest("", new RequestCallback() {
 								@Override
 								public void onResponseReceived(Request req, Response resp) {
@@ -273,7 +255,7 @@ public class FunctionView extends Composite {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					 */
+					*/
 					break;
 				default:
 					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");

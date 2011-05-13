@@ -3,6 +3,7 @@ package biomatec.client;
 import java.util.ArrayList;
 
 import biomatec.javaBeans.Dataset;
+import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -54,11 +55,37 @@ public class GeneSearch implements EntryPoint{
 	private Label errorLabel = new Label();
 
 	private ArrayList<Gene> selectedGenes = new ArrayList<Gene>();
+	private ArrayList<Function> functions = new ArrayList<Function>();
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		
+		// Initialize the service proxy.
+		if (geneSearchSvc == null) {
+			geneSearchSvc = GWT.create(GeneSearchService.class);
+		}
+		
+		// Set up the callback object.
+		AsyncCallback<ArrayList<Function>> callback = new AsyncCallback<ArrayList<Function>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				System.err.print(caught);
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Function> results) {
+				functions = results;
+			}
+		};
+		
+		// Make the call to the gene detail search service.
+		try{
+			geneSearchSvc.functions(callback);
+		}catch (Exception e){
+			System.err.print(e);
+		}
 
 		// Table headers for the genes table
 		genesTable.setText(0, 0, "SYMBOL");
@@ -237,7 +264,7 @@ public class GeneSearch implements EntryPoint{
 
 						
 						RootPanel.get("yield").clear();
-						RootPanel.get("yield").add(new GeneView(selectedGenes, dataset));
+						RootPanel.get("yield").add(new GeneView(selectedGenes, dataset, functions));
 					}
 				} catch(Exception e) {
 					e.printStackTrace();
