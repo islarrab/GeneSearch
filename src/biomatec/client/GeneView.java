@@ -7,6 +7,8 @@ import biomatec.client.function.FunctionView;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
+import biomatec.javaBeans.SelectedGenesData;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -39,11 +41,13 @@ public class GeneView extends Composite {
 	private Button updateButton = new Button("Update");
 	
 	private FunctionDictionary functionDictionary;
-
+	private SelectedGenesData selectedGenesData;
+	
     private CheckBox genesCheck[];
 
-	public GeneView(final ArrayList<Gene> selectedGenes, final Dataset dataset, final ArrayList<Function> functions) {
+	public GeneView(final ArrayList<Gene> selectedGenes, final Dataset dataset, final ArrayList<Function> functions, SelectedGenesData selectedGenesData) {
 		functionDictionary = new FunctionDictionary(functions);
+		this.selectedGenesData = selectedGenesData;
         genesCheck = new CheckBox[selectedGenes.size()];
 
 		// Assemble main panel

@@ -10,6 +10,7 @@ import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.Request;
@@ -18,6 +19,7 @@ import com.google.gwt.http.client.RequestBuilder.Method;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -266,12 +268,6 @@ public class FunctionView extends Composite {
 		});
 
 	}
-
-	protected native String getHeatmapText() /*-{
-		// TODO Auto-generated method stub
-		var s = window.frames["heatmap"].document.body.innerHTML;
-		return s;
-	}-*/;
 
 	private void parseUrlForParameters() {
 		String newUrl = parsedUrl;

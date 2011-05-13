@@ -14,13 +14,16 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface GeneSearchServiceAsync {
 	void geneSearch(String input, AsyncCallback<ArrayList<Gene>> callback)
-			throws IllegalArgumentException;
+	throws IllegalArgumentException;
 	void geneDetailSearch(ArrayList<Gene> selectedGenes, AsyncCallback<ArrayList<Dataset>> callback)
-		throws IllegalArgumentException;
+	throws IllegalArgumentException;
 	void generateHeatMap(ArrayList<Gene> selectedGenes, Dataset dataset, AsyncCallback<ArrayList<ArrayList<Double>>> callback)
-		throws IOException;
+	throws IOException;
 	void columnsType(int datasetKey, AsyncCallback<String> callback)
-		throws IOException;
+	throws IOException;
 	void functions(AsyncCallback<ArrayList<Function>> callback)
-		throws IOException;
+	throws IOException;
+	void getData(String endpoint, String requestParameters,
+			AsyncCallback<String> callback) throws IOException;
+
 }

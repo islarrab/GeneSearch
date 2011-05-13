@@ -14,6 +14,7 @@ import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 import biomatec.javaBeans.Double;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -30,6 +31,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class GeneSearchServiceImpl extends RemoteServiceServlet implements
 GeneSearchService {
 
+	private static final int STATUS_CODE_OK = 200;
 	private final String DRIVER = "com.mysql.jdbc.Driver"; 
 	private final String URL = "jdbc:mysql://10.17.210.8:3306/";
 	private final String DB = "biomatec";
@@ -164,7 +166,7 @@ GeneSearchService {
 		return results;
 
 	}
-	
+
 	@Override
 	public String columnsType(int datasetKey) throws IOException{
 		String s = "";
@@ -202,11 +204,20 @@ GeneSearchService {
 				Function f = new Function(name, url, return_type, function_type);
 				functionArray.add(f);
 			}
+			connection.close();
 		} catch (Exception e){
 			System.err.println("ERROR: Problems with the database");
 			e.printStackTrace();
 		}
 		return functionArray;
 	}
-	
+
+	@Override
+	public String getData(String endpoint, String requestParameters) throws IOException{
+		String text;
+		
+		text = HTTPRequest.sendGetRequest(endpoint, requestParameters);
+		
+		return text;
+	}
 }

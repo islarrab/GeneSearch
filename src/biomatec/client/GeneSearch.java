@@ -1,10 +1,14 @@
 package biomatec.client;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
+import biomatec.javaBeans.SelectedGenesData;
+import biomatec.server.HTTPRequest;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -56,7 +60,8 @@ public class GeneSearch implements EntryPoint{
 
 	private ArrayList<Gene> selectedGenes = new ArrayList<Gene>();
 	private ArrayList<Function> functions = new ArrayList<Function>();
-
+	private SelectedGenesData selectedGenesData = new SelectedGenesData();
+	private Dataset dataset = new Dataset();
 	/**
 	 * This is the entry point method.
 	 */
@@ -236,7 +241,6 @@ public class GeneSearch implements EntryPoint{
 		datasetsTable.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				try{
-					final Dataset dataset = new Dataset();
 					int row = datasetsTable.getCellForEvent(event).getRowIndex();
 					if (row>0) {
 						int datasetKey = Integer.parseInt(datasetsTable.getText(row, 0));
@@ -245,26 +249,11 @@ public class GeneSearch implements EntryPoint{
 						dataset.setDescription(datasetsTable.getText(row, 2));
 						dataset.setGenes(datasetsTable.getText(row, 3));
 						
-						// Set up the callback object.
-						AsyncCallback<String> callback = new AsyncCallback<String>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								errorLabel.setText("Conection error");
-							}
-
-							@Override
-							public void onSuccess(String result) {
-								errorLabel.setText("");
-								dataset.setColumnsType(result);
-							}
-						};
-
-						// Make the call to the gene detail search service.
-						geneSearchSvc.columnsType(dataset.getDatasetKey(), callback);
-
+						
+						getSelectedGenesData();
 						
 						RootPanel.get("yield").clear();
-						RootPanel.get("yield").add(new GeneView(selectedGenes, dataset, functions));
+						RootPanel.get("yield").add(new GeneView(selectedGenes, dataset, functions, selectedGenesData));
 					}
 				} catch(Exception e) {
 					e.printStackTrace();
@@ -273,6 +262,65 @@ public class GeneSearch implements EntryPoint{
 		});
 
 
+	}
+
+	protected void getSelectedGenesData() {
+		
+		// Set up the data callback object.
+		AsyncCallback<String> callbackD = new AsyncCallback<String>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				errorLabel.setText("Conection error");
+			}
+
+			@Override
+			public void onSuccess(String result) {
+				errorLabel.setText("");
+				System.out.println(result);	
+				String dataAux[];
+				String data[][];
+				dataAux = result.split("\\n");
+				System.out.println(dataAux.length);
+				data = new String[dataAux.length][];
+				for (int i=0; i<dataAux.length; i++) {
+					data[i] = dataAux[i].split("\t");
+				}
+				selectedGenesData.setData(data);
+			}
+		};
+		
+		// Set up the columnsType callback object.
+		AsyncCallback<String> callbackCT = new AsyncCallback<String>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				errorLabel.setText("Conection error");
+			}
+
+			@Override
+			public void onSuccess(String result) {
+				errorLabel.setText("");
+				selectedGenesData.setColumnsType(result);
+			}
+		};
+		
+		
+		String dsk = dataset.getDatasetKey()+"";
+		String ufk = selectedGenes.get(0).getUnifeatureKey()+"";
+		for (int i=1; i<selectedGenes.size(); i++) {
+			ufk += ","+selectedGenes.get(i).getUnifeatureKey();
+		}
+		String endpoint = "http://biomatec.mty.itesm.mx:8080/Biomatec1/getRowData.jsp";
+		String requestParameters = "dsk="+dsk+"&unifeaturekey="+ufk+"&format=text";
+		
+		// Make the call to the gene detail search service.
+		try {
+			geneSearchSvc.getData(endpoint, requestParameters, callbackD);
+			geneSearchSvc.columnsType(dataset.getDatasetKey(), callbackCT);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	protected void geneSearch(String text) {

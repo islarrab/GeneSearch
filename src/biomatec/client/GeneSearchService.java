@@ -21,5 +21,6 @@ public interface GeneSearchService extends RemoteService {
 	ArrayList<ArrayList<Double>> generateHeatMap(ArrayList<Gene> genes, Dataset dataset) throws IOException;
 	String columnsType(int datasetKey) throws IOException;
 	ArrayList<Function> functions() throws IOException;
+	String getData(String endpoint, String requestParameters) throws IOException;
 }
 
