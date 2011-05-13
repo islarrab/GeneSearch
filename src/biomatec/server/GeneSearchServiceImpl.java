@@ -8,9 +8,18 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import biomatec.client.GeneSearchService;
+import biomatec.client.function.Heatmap;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Gene;
 import biomatec.javaBeans.Double;
+
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -127,7 +136,7 @@ GeneSearchService {
 		try{
 			for(int i = 0; i < selectedGenes.size(); i++){   
 				results.add(new ArrayList<Double>());
-				
+
 				// Do the query for the values to be displayed on the Heat Map
 				String query = 
 					"SELECT uv.PVALUE " +
@@ -150,7 +159,7 @@ GeneSearchService {
 			System.err.println("ERROR: Problems with the database");
 			e.printStackTrace();
 		}
-		
+
 		return results;
 
 	}
@@ -165,7 +174,7 @@ GeneSearchService {
 				"WHERE DATA_SET_KEY = " + datasetKey;
 			ResultSet rs = statement.executeQuery(query);
 			rs.next();
-			s = rs.getString(0);
+			s = rs.getString("COLUMNS_TYPE");
 			connection.close();
 		} catch(Exception e){
 			System.err.println("ERROR: Problems with the database");
@@ -173,5 +182,37 @@ GeneSearchService {
 		}
 		return s;
 	}
-	
+
+	private String text;
+	public String getText(String url) throws IOException {
+		try {
+			RequestBuilder request = new RequestBuilder(RequestBuilder.GET, url);
+			RequestCallback callback = new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request req, Response resp) {
+					text = resp.getText();
+					this.notify();
+				}
+
+				@Override
+				public void onError(Request res, Throwable throwable) {
+					// TODO handle errors
+					text = "";
+					this.notify();
+				}
+			};
+			request.sendRequest("", callback);
+			callback.wait();
+			return text;
+		} catch (RequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }

@@ -11,6 +11,7 @@
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
   <!-- Other module inherits                                      -->
+  <inherits name="com.google.gwt.http.HTTP"/>
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='biomatec.client.GeneSearch'/>

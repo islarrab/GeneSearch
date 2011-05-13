@@ -1,13 +1,25 @@
 package biomatec.client.function;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import biomatec.client.GeneSearchService;
+import biomatec.client.GeneSearchServiceAsync;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestBuilder.Method;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -35,8 +47,10 @@ public class FunctionView extends Composite {
 	private HTML h = new HTML();
 	private CheckBox sync = new CheckBox("SYNC");
 	private Button remove = new Button("Remove");
+	private Label errorLabel = new Label();
 
 	private char type;
+	private String columnTypes; // used only for heatmaps
 
 	public FunctionView(){}
 
@@ -172,10 +186,10 @@ public class FunctionView extends Composite {
 							HorizontalPanel hp = new HorizontalPanel();
 							Label name = new Label(selectedGenes.get(i).getSymbol());
 							Image image = new Image("Images/heatmap.png");
-							
+
 							hp.add(name);
 							hp.add(image);
-							
+
 							vp2.add(hp);
 						}
 					}
@@ -183,6 +197,83 @@ public class FunctionView extends Composite {
 				case 'H':
 					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");
 					vp2.add(h);
+					break;
+				case 'S':
+					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\" id=\"heatmap\"></iframe>");
+
+
+					for (int i=0; i<selectedGenes.size(); i++) {
+						final int index = i;
+						String path = "";
+						path = function.getUrl();
+						path = path.replace("&type=%%Type%%", "");
+						path = path.replace("<dsk>", dataset.getDatasetKey()+"");
+						path = path.replace("<ufk>", selectedGenes.get(i).getUnifeatureKey()+"");
+
+						HorizontalPanel hp = new HorizontalPanel();
+						Label name = new Label(selectedGenes.get(index).getSymbol());
+						String text = getHeatmapText();
+
+						String textArray[] = text.split("\t");
+						int beginning = dataset.getColumnsType().indexOf("D");
+						int end = dataset.getColumnsType().lastIndexOf("D");
+						double values[] = new double[end-beginning+1];
+
+						for (int j=0; beginning+j<=end; j++) {
+							values[j] = Double.parseDouble(textArray[beginning+j]);
+						}
+
+						Heatmap heatmap = new Heatmap(values);
+						hp.add(name);
+						hp.add(heatmap);
+						vp2.add(hp);
+					}
+
+					/*
+					try {
+						for (int i=0; i<selectedGenes.size(); i++) {
+							final int index = i;
+							String path = "";
+							path = function.getUrl();
+							path = path.replace("&type=%%Type%%", "");
+							path = path.replace("<dsk>", dataset.getDatasetKey()+"");
+							path = path.replace("<ufk>", selectedGenes.get(i).getUnifeatureKey()+"");
+							new RequestBuilder(RequestBuilder.GET, path).sendRequest("", new RequestCallback() {
+								@Override
+								public void onResponseReceived(Request req, Response resp) {
+									HorizontalPanel hp = new HorizontalPanel();
+									Label name = new Label(selectedGenes.get(index).getSymbol());
+									String text = resp.getText();
+
+									String textArray[] = text.split("\t");
+									int beginning = dataset.getColumnsType().indexOf("D");
+									int end = dataset.getColumnsType().lastIndexOf("D");
+									double values[] = new double[end-beginning+1];
+
+									for (int j=0; beginning+j<=end; j++) {
+										values[j] = Double.parseDouble(textArray[beginning+j]);
+									}
+
+									Heatmap heatmap = new Heatmap(values);
+									hp.add(name);
+									hp.add(heatmap);
+									vp2.add(hp);
+
+								}
+
+								@Override
+								public void onError(Request res, Throwable throwable) {
+									// TODO handle errors
+								}
+							});
+
+						}
+
+					} catch (RequestException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					 */
 					break;
 				default:
 					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");
@@ -193,6 +284,12 @@ public class FunctionView extends Composite {
 		});
 
 	}
+
+	protected native String getHeatmapText() /*-{
+		// TODO Auto-generated method stub
+		var s = window.frames["heatmap"].document.body.innerHTML;
+		return s;
+	}-*/;
 
 	private void parseUrlForParameters() {
 		String newUrl = parsedUrl;
@@ -225,4 +322,22 @@ public class FunctionView extends Composite {
 	public char getType(){
 		return type;
 	}
+
+	/**
+	 * used only for heatmaps
+	 * @param columnTypes string with the type of each column returned from the
+	 * heatmaps webservice
+	 */
+	private void setColumnTypes(String columnTypes) {
+		this.columnTypes = columnTypes;
+	}
+
+	/**
+	 * used only for heatmaps
+	 * @return columnTypes
+	 */
+	private String getColumnTypes() {
+		return columnTypes;
+	}
+
 }

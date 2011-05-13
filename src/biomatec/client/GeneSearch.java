@@ -209,7 +209,7 @@ public class GeneSearch implements EntryPoint{
 		datasetsTable.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				try{
-					Dataset dataset = new Dataset();
+					final Dataset dataset = new Dataset();
 					int row = datasetsTable.getCellForEvent(event).getRowIndex();
 					if (row>0) {
 						int datasetKey = Integer.parseInt(datasetsTable.getText(row, 0));
@@ -217,7 +217,25 @@ public class GeneSearch implements EntryPoint{
 						dataset.setName(datasetsTable.getText(row, 1));
 						dataset.setDescription(datasetsTable.getText(row, 2));
 						dataset.setGenes(datasetsTable.getText(row, 3));
-						//TODO Mandar a llamar a dataset.setColumnsType(geneSearchSvc.columnsType(datasetKey));
+						
+						// Set up the callback object.
+						AsyncCallback<String> callback = new AsyncCallback<String>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								errorLabel.setText("Conection error");
+							}
+
+							@Override
+							public void onSuccess(String result) {
+								errorLabel.setText("");
+								dataset.setColumnsType(result);
+							}
+						};
+
+						// Make the call to the gene detail search service.
+						geneSearchSvc.columnsType(dataset.getDatasetKey(), callback);
+
+						
 						RootPanel.get("yield").clear();
 						RootPanel.get("yield").add(new GeneView(selectedGenes, dataset));
 					}
