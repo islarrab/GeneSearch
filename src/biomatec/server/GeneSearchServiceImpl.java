@@ -191,7 +191,7 @@ GeneSearchService {
 		init();
 		try{
 			String query = 
-				"SELECT NAME, URL, RETURN_TYPE, MULTI_GENE " +
+				"SELECT NAME, URL, RETURN_TYPE, MULTI_GENE, GET_POST " +
 				"FROM VIEWER_SERVICES ";
 			ResultSet rs = statement.executeQuery(query);
 			while(rs.next()){
@@ -199,7 +199,8 @@ GeneSearchService {
 				String url = rs.getString("URL");
 				char return_type = rs.getString("RETURN_TYPE").charAt(0);
 				char function_type = rs.getString("MULTI_GENE").charAt(0);
-				Function f = new Function(name, url, return_type, function_type);
+				char method = rs.getString("GET_POST").charAt(0);
+				Function f = new Function(name, url, return_type, function_type, method);
 				functionArray.add(f);
 			}
 		} catch (Exception e){
