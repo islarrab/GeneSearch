@@ -185,28 +185,18 @@ public class FunctionView extends Composite {
 				parseUrlForParameters();
 				switch(function.getReturnType()) {
 				// TODO el resto de los return types para multiGene
-				case 'I':
-					//Image image = new Image(reparsedUrl);
-					// TODO reemplazar el ciclo por la linea de arriba cuando el webservice funcione
-					for (int i=0; i<selectedGenes.size(); i++) {
-						if (selectedGenes.get(i).getAvailable()) {
-							HorizontalPanel hp = new HorizontalPanel();
-							Label name = new Label(selectedGenes.get(i).getSymbol());
-							Image image = new Image("Images/heatmap.png");
-
-							hp.add(name);
-							hp.add(image);
-
-							vp2.add(hp);
-						}
-					}
+				case 'I': // Image
+					Image image = new Image(reparsedUrl);
+					vp2.add(image);
 					break;
-				case 'H':
+				case 'H': // HTML
 					System.out.println(reparsedUrl);
 					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");
 					vp2.add(h);
 					break;
-				default:
+				case 'P': // PDF
+					h.setHTML("<embed src=\""+reparsedUrl+"\" height=\"500px\" width=\"800px\">");
+				default: // the default action is treating the result as HTML 
 					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");
 					vp2.add(h);
 					break;
@@ -233,7 +223,7 @@ public class FunctionView extends Composite {
 		ft.setText(0, 0, "GENE");
 		ft.getRowFormatter().setStyleName(0, "resultsTable-headerRow");
 		for(int i = 0; i < selectedGenes.size(); i++) {
-			if (selectedGenes.get(i).getAvailable()){
+			if (selectedGenes.get(i).getAvailable()){	
 				ft.setText(i+1, 0, selectedGenes.get(i).getSymbol());
 				ft.getRowFormatter().setStyleName(i+1, "resultsTable-dataRow");
 			}

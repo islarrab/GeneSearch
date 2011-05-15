@@ -276,6 +276,8 @@ public class GeneSearch implements EntryPoint{
 			@Override
 			public void onSuccess(String result) {
 				errorLabel.setText("");
+				result = result.replaceAll("\t", "+");
+				result = result.replaceAll("\n", ";");
 				selectedGenesData.setData(result);
 			}
 		};
