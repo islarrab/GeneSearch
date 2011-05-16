@@ -1,6 +1,7 @@
 package biomatec.client.function;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 
 import biomatec.client.GeneSearchService;
@@ -9,6 +10,7 @@ import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 import biomatec.javaBeans.SelectedGenesData;
+import biomatec.shared.HTTPRequest;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -20,6 +22,7 @@ import com.google.gwt.http.client.RequestBuilder.Method;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -191,6 +194,9 @@ public class FunctionView extends Composite {
 					break;
 				case 'H': // HTML
 					System.out.println(reparsedUrl);
+					Reader data = new Reader();
+					URL endpoint = new URL();
+					HTTPRequest.postData(data, endpoint, output);
 					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");
 					vp2.add(h);
 					break;
@@ -205,7 +211,6 @@ public class FunctionView extends Composite {
 		});
 
 	}
-
 	private void parseUrlForParameters() {
 		String newUrl = parsedUrl;
 		for (int i=0; i<sidebar.getRowCount()-1; i++) {

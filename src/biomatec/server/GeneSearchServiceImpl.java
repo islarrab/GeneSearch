@@ -13,6 +13,7 @@ import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 import biomatec.javaBeans.Double;
+import biomatec.shared.HTTPRequest;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;

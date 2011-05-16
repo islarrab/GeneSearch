@@ -7,7 +7,7 @@ import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 import biomatec.javaBeans.SelectedGenesData;
-import biomatec.server.HTTPRequest;
+import biomatec.shared.HTTPRequest;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
