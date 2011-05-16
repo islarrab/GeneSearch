@@ -30,7 +30,7 @@ public class HTTPRequest
 			// Send a GET request to the servlet
 			try
 			{
-				// Construct data
+				// Construct 
 				StringBuffer data = new StringBuffer();
 
 				// Send data
@@ -48,7 +48,7 @@ public class HTTPRequest
 				String line;
 				while ((line = rd.readLine()) != null)
 				{
-					
+
 					String newLine = "\n";
 					sb.append(line);
 					sb.append(newLine);
@@ -91,40 +91,32 @@ public class HTTPRequest
 
 			OutputStream out = urlc.getOutputStream();
 
-			try
-			{
+			try {
 				Writer writer = new OutputStreamWriter(out, "UTF-8");
 				pipe(data, writer);
 				writer.close();
-			} catch (IOException e)
-			{
+			} catch (IOException e) {
 				throw new Exception("IOException while posting data", e);
-			} finally
-			{
+			} finally {
 				if (out != null)
 					out.close();
 			}
 
 			InputStream in = urlc.getInputStream();
-			try
-			{
+			try {
 				Reader reader = new InputStreamReader(in);
 				pipe(reader, output);
 				reader.close();
-			} catch (IOException e)
-			{
+			} catch (IOException e)	{
 				throw new Exception("IOException while reading response", e);
-			} finally
-			{
+			} finally {
 				if (in != null)
 					in.close();
 			}
 
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			throw new Exception("Connection error (is server running at " + endpoint + " ?): " + e);
-		} finally
-		{
+		} finally {
 			if (urlc != null)
 				urlc.disconnect();
 		}
@@ -143,5 +135,4 @@ public class HTTPRequest
 		}
 		writer.flush();
 	}
-
 }
