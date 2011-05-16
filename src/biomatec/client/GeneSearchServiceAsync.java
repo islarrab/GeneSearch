@@ -8,6 +8,7 @@ import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 import biomatec.javaBeans.Double;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.FormPanel;
 
 /**
  * The async counterpart of <code>GeneSearchService</code>.
@@ -25,5 +26,7 @@ public interface GeneSearchServiceAsync {
 	throws IOException;
 	void getData(String endpoint, String requestParameters,
 			AsyncCallback<String> callback) throws IOException;
+	void doPost(String endpoint, String data, AsyncCallback<String> callback)
+	throws IOException;
 
 }

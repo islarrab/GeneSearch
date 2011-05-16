@@ -10,6 +10,7 @@ import biomatec.javaBeans.Double;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.google.gwt.user.client.ui.FormPanel;
 
 /**
  * The client side stub for the RPC service.
@@ -22,5 +23,6 @@ public interface GeneSearchService extends RemoteService {
 	String columnsType(int datasetKey) throws IOException;
 	ArrayList<Function> functions() throws IOException;
 	String getData(String endpoint, String requestParameters) throws IOException;
+	String doPost(String endpoint, String data) throws IOException;
 }
 

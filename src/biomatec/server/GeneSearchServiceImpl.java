@@ -8,20 +8,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import biomatec.client.GeneSearchService;
-import biomatec.client.function.Heatmap;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 import biomatec.javaBeans.Double;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -31,7 +22,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class GeneSearchServiceImpl extends RemoteServiceServlet implements
 GeneSearchService {
 
-	private static final int STATUS_CODE_OK = 200;
 	private final String DRIVER = "com.mysql.jdbc.Driver"; 
 	private final String URL = "jdbc:mysql://10.17.210.8:3306/";
 	private final String DB = "biomatec";
@@ -220,5 +210,14 @@ GeneSearchService {
 		text = HTTPRequest.sendGetRequest(endpoint, requestParameters);
 		
 		return text;
+	}
+	
+	@Override
+	public String doPost(String endpoint, String data) {
+		String result = "";
+		
+		result = HTTPRequest.postData(endpoint, data);
+		
+		return result;
 	}
 }

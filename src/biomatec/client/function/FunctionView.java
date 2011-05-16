@@ -45,7 +45,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.CheckBox;
 
 public class FunctionView extends Composite {
-
+	
+	private static GeneSearchServiceAsync geneSearchSvc = GWT.create(GeneSearchService.class);
+	
 	private Function function;
 	private ArrayList<Gene> selectedGenes;
 	private Dataset dataset;
@@ -182,19 +184,20 @@ public class FunctionView extends Composite {
 		form.setEncoding(FormPanel.ENCODING_URLENCODED);
 		form.setMethod(FormPanel.METHOD_POST);
 		
-		Hidden data = new Hidden();
-		data.setValue(this.selectedGenesData.getData());
-		data.getElement().setAttribute("name", "data");
-		Hidden columns = new Hidden();
-		columns.setValue(this.selectedGenesData.getColumnsType());
-		columns.getElement().setAttribute("name", "columns");
-		formPanel.add(data);
-		formPanel.add(columns);
+		
+//		Hidden data = new Hidden();
+//		data.setValue(this.selectedGenesData.getData());
+//		data.getElement().setAttribute("name", "data");
+//		Hidden columns = new Hidden();
+//		columns.setValue(this.selectedGenesData.getColumnsType());
+//		columns.getElement().setAttribute("name", "columns");
+//		formPanel.add(data);
+//		formPanel.add(columns);
 		formPanel.add(sidebar);
 		for (int i=0; i<parameterNames.size(); i++) {
 			Label name = new Label(parameterNames.get(i));
 			TextBox paramTextBox = new TextBox();
-			paramTextBox.getElement().setAttribute("name", parameterNames.get(i).toLowerCase());
+			//paramTextBox.getElement().setAttribute("name", parameterNames.get(i).toLowerCase());
 			paramTextBox.setVisibleLength(10);
 			
 			sidebar.setWidget(i, 0, name);
@@ -211,8 +214,34 @@ public class FunctionView extends Composite {
 				
 				parseUrlForParameters();
 				form.setAction(reparsedUrl);
-				form.submit();
+				System.out.println(reparsedUrl);
+//				form.submit();
+				
 
+				// Set up the callback object.
+				AsyncCallback<String> callback = new AsyncCallback<String>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						errorLabel.setText("Error");
+					}
+
+					@Override
+					public void onSuccess(String results) {
+						errorLabel.setText("");
+						System.out.println("lol\n"+results);
+						h.setHTML("<div>"+results+"</div>");
+						vp2.add(h);
+					}
+				};
+				
+				String data = "data="+selectedGenesData.getData()+"&columns="+selectedGenesData.getColumnsType();
+				try {
+					geneSearchSvc.doPost(reparsedUrl, data, callback);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				/*
 				switch(function.getReturnType()) {
 				// TODO el resto de los return types para multiGene
@@ -236,9 +265,21 @@ public class FunctionView extends Composite {
 			}
 		});
 
-		
-		
 		/*
+		form.addFormHandler(new FormHandler(){
+			public void onSubmit(FormSubmitEvent event) {
+				
+			}
+			
+			public void onSubmitComplete(FormSubmitCompleteEvent event) {
+				System.out.println("lol"+event.getResults());
+				h.setHTML("<div>"+event.getResults()+"</div>");
+				vp2.add(h);
+			}
+		});
+		*/
+		
+		
 		// Add an event handler to the form.
 		form.addSubmitHandler(new FormPanel.SubmitHandler() {
 			public void onSubmit(SubmitEvent event) {
@@ -252,18 +293,17 @@ public class FunctionView extends Composite {
 				// fired. Assuming the service returned a response of type text/html,
 				// we can get the result text here (see the FormPanel documentation for
 				// further explanation).
-				System.out.println("lol"+event.getResults());
+				System.out.println("lol\n"+event.getResults());
 				h.setHTML("<div>"+event.getResults()+"</div>");
 				vp2.add(h);
 			}
 		});
-		*/
 
 		form.setWidget(formPanel);
 	}
 	private void parseUrlForParameters() {
-		String newUrl = parsedUrl;
-		for (int i=0; i<sidebar.getRowCount()-1; i++) {
+		String newUrl = function.getUrl();
+		for (int i=0; i<sidebar.getRowCount(); i++) {
 			String name = sidebar.getText(i, 0);
 			TextBox tb = (TextBox)sidebar.getWidget(i, 1);
 			String value = tb.getValue();
