@@ -11,7 +11,6 @@ import biomatec.client.GeneSearchService;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
-import biomatec.javaBeans.Double;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 

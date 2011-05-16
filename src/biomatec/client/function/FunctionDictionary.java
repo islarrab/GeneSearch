@@ -2,28 +2,17 @@ package biomatec.client.function;
 
 import java.util.ArrayList;
 
-import biomatec.client.GeneSearchService;
-import biomatec.client.GeneSearchServiceAsync;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 import biomatec.javaBeans.SelectedGenesData;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 
 public class FunctionDictionary {
 	
 	private ArrayList<Function> functions = new ArrayList<Function>();
 
-	/**
-	 * Create a remote service proxy to talk to the server-side gene search service.
-	 */
-	private GeneSearchServiceAsync geneSearchSvc = GWT.create(GeneSearchService.class);
-	
 	public FunctionDictionary(ArrayList<Function> functions) {
 		this.functions = functions;
 	}

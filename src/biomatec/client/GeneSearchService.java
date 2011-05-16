@@ -6,11 +6,9 @@ import java.util.ArrayList;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
-import biomatec.javaBeans.Double;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.google.gwt.user.client.ui.FormPanel;
 
 /**
  * The client side stub for the RPC service.

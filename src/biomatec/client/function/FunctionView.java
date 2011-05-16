@@ -1,7 +1,6 @@
 package biomatec.client.function;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 
 import biomatec.client.GeneSearchService;
@@ -10,51 +9,33 @@ import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 import biomatec.javaBeans.SelectedGenesData;
-import biomatec.server.HTTPRequest;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestBuilder.Method;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.CheckBox;
 
 public class FunctionView extends Composite {
-	
+
 	private static GeneSearchServiceAsync geneSearchSvc = GWT.create(GeneSearchService.class);
-	
+
 	private Function function;
 	private ArrayList<Gene> selectedGenes;
+	@SuppressWarnings("unused")
 	private Dataset dataset;
 	private SelectedGenesData selectedGenesData;
 	private ArrayList<String> parameterNames;
-	private String parsedUrl = null; // String parsed for common parameters (ufk, dsk, etc.)
-	private String reparsedUrl = null; // String parsed from 'parsedUrl' for captured parameters
+	private String reparsedUrl = null; // String parsed from url for captured parameters
 
 	private FormPanel form = new FormPanel();
 	private VerticalPanel formPanel = new VerticalPanel();
@@ -70,7 +51,6 @@ public class FunctionView extends Composite {
 	private Label errorLabel = new Label();
 
 	private char type;
-	private String columnTypes; // used only for heatmaps
 
 	public FunctionView(){}
 
@@ -86,6 +66,7 @@ public class FunctionView extends Composite {
 		panel.add(vp);
 		panel.add(vp2);
 		vp.add(sync);
+		vp.add(ft);
 		vp.add(form);
 		vp2.add(remove);
 		remove.addClickHandler(new ClickHandler(){
@@ -113,17 +94,6 @@ public class FunctionView extends Composite {
 		this.setStyleName("view-general");
 	}
 
-	private void parseURL() {
-		String newUrl = function.getUrl();
-
-		//Parse for data
-		newUrl = newUrl.replace("<data>", selectedGenesData.getData());
-		//Parse for columns type
-		newUrl = newUrl.replace("<columns>", selectedGenesData.getColumnsType());
-
-		this.parsedUrl = newUrl;
-
-	}
 
 	private void generateParametersArray() {
 		String newUrl = function.getUrl();
@@ -158,13 +128,16 @@ public class FunctionView extends Composite {
 					String url = function.getUrl();
 					url = url.replace("<ufk>", unifeatureKey+"");
 					switch(function.getReturnType()){
-					//TODO el resto de los return types para single gene
 					case 'I':
-						h.setHTML("<img height=\"500px\" width=\"800px\" src=\""+url+"\"></iframe>");
+						h.setHTML("<img height=\"500px\" width=\"800px\" src=\""+url+"\"/>");
 						vp2.add(h);
 						break;
 					case 'H': 
 						h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+url+"\"></iframe>");
+						vp2.add(h);
+						break;
+					case 'P':
+						h.setHTML("<embed height=\"500px\" width=\"800px\" src=\""+url+"\"/>");
 						vp2.add(h);
 						break;
 					default: 
@@ -181,25 +154,12 @@ public class FunctionView extends Composite {
 		generateParametersArray();
 		Button go = new Button("Go");
 
-		form.setEncoding(FormPanel.ENCODING_URLENCODED);
-		form.setMethod(FormPanel.METHOD_POST);
-		
-		
-//		Hidden data = new Hidden();
-//		data.setValue(this.selectedGenesData.getData());
-//		data.getElement().setAttribute("name", "data");
-//		Hidden columns = new Hidden();
-//		columns.setValue(this.selectedGenesData.getColumnsType());
-//		columns.getElement().setAttribute("name", "columns");
-//		formPanel.add(data);
-//		formPanel.add(columns);
 		formPanel.add(sidebar);
 		for (int i=0; i<parameterNames.size(); i++) {
 			Label name = new Label(parameterNames.get(i));
 			TextBox paramTextBox = new TextBox();
-			//paramTextBox.getElement().setAttribute("name", parameterNames.get(i).toLowerCase());
 			paramTextBox.setVisibleLength(10);
-			
+
 			sidebar.setWidget(i, 0, name);
 			sidebar.setWidget(i, 1, paramTextBox);
 		}
@@ -211,12 +171,10 @@ public class FunctionView extends Composite {
 				vp2.clear();
 				vp2.add(remove);
 				vp2.setCellHorizontalAlignment(remove, VerticalPanel.ALIGN_RIGHT);
-				
+
 				parseUrlForParameters();
 				form.setAction(reparsedUrl);
 				System.out.println(reparsedUrl);
-//				form.submit();
-				
 
 				// Set up the callback object.
 				AsyncCallback<String> callback = new AsyncCallback<String>() {
@@ -228,77 +186,35 @@ public class FunctionView extends Composite {
 					@Override
 					public void onSuccess(String results) {
 						errorLabel.setText("");
-						System.out.println("lol\n"+results);
-						h.setHTML("<div>"+results+"</div>");
-						vp2.add(h);
+						switch(function.getReturnType()){
+						case 'I':
+							h.setHTML("<img src=\""+results+"\"/>");
+							vp2.add(h);
+							break;
+						case 'H': 
+							h.setHTML("<div>"+results+"</div>");
+							vp2.add(h);
+							break;
+						case 'P':
+							h.setHTML("<embed height=\"500px\" width=\"800px\" src=\""+results+"\"/>");
+							vp2.add(h);
+							break;
+						default: 
+							h.setHTML("<div>"+results+"</div>");
+							vp2.add(h);
+							break;
+						}
 					}
 				};
-				
+
 				String data = "data="+selectedGenesData.getData()+"&columns="+selectedGenesData.getColumnsType();
 				try {
 					geneSearchSvc.doPost(reparsedUrl, data, callback);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				/*
-				switch(function.getReturnType()) {
-				// TODO el resto de los return types para multiGene
-				case 'I': // Image
-					Image image = new Image(reparsedUrl);
-					vp2.add(image);
-					break;
-				case 'H': // HTML
-					System.out.println(reparsedUrl);
-					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");
-					vp2.add(h);
-					break;
-				case 'P': // PDF
-					h.setHTML("<embed src=\""+reparsedUrl+"\" height=\"500px\" width=\"800px\">");
-				default: // the default action is treating the result as HTML 
-					h.setHTML("<iframe height=\"500px\" width=\"800px\" src=\""+reparsedUrl+"\"></iframe>");
-					vp2.add(h);
-					break;
-				}
-				 */
 			}
 		});
-
-		/*
-		form.addFormHandler(new FormHandler(){
-			public void onSubmit(FormSubmitEvent event) {
-				
-			}
-			
-			public void onSubmitComplete(FormSubmitCompleteEvent event) {
-				System.out.println("lol"+event.getResults());
-				h.setHTML("<div>"+event.getResults()+"</div>");
-				vp2.add(h);
-			}
-		});
-		*/
-		
-		
-		// Add an event handler to the form.
-		form.addSubmitHandler(new FormPanel.SubmitHandler() {
-			public void onSubmit(SubmitEvent event) {
-				// This event is fired just before the form is submitted. We can take
-				// this opportunity to perform validation.
-			}
-		});
-		form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-			public void onSubmitComplete(SubmitCompleteEvent event) {
-				// When the form submission is successfully completed, this event is
-				// fired. Assuming the service returned a response of type text/html,
-				// we can get the result text here (see the FormPanel documentation for
-				// further explanation).
-				System.out.println("lol\n"+event.getResults());
-				h.setHTML("<div>"+event.getResults()+"</div>");
-				vp2.add(h);
-			}
-		});
-
 		form.setWidget(formPanel);
 	}
 	private void parseUrlForParameters() {
@@ -332,22 +248,4 @@ public class FunctionView extends Composite {
 	public char getType(){
 		return type;
 	}
-
-	/**
-	 * used only for heatmaps
-	 * @param columnTypes string with the type of each column returned from the
-	 * heatmaps webservice
-	 */
-	private void setColumnTypes(String columnTypes) {
-		this.columnTypes = columnTypes;
-	}
-
-	/**
-	 * used only for heatmaps
-	 * @return columnTypes
-	 */
-	private String getColumnTypes() {
-		return columnTypes;
-	}
-
 }

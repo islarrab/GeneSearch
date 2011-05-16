@@ -49,6 +49,7 @@ public class GeneView extends Composite {
         genesCheck = new CheckBox[selectedGenes.size()];
 
 		// Assemble main panel
+        mainPanel.add(errorLabel);
 		mainPanel.add(panelHeader);
 		mainPanel.add(viewsPanel);
 		mainPanel.setWidth("1000px");
@@ -76,7 +77,6 @@ public class GeneView extends Composite {
 			if (selectedGenes.get(0).getSymbol().equals(genesAvailable[i]))
 				found = true;
 		if (found) {
-			//genesLabel.setHTML("<b>Genes:</b> "+selectedGenes.get(0).getSymbol());
             genesCheck[0] = new CheckBox(selectedGenes.get(0).getSymbol());
             genesCheck[0].setValue(true);
             genesPanel.add(genesCheck[0]);
@@ -84,7 +84,6 @@ public class GeneView extends Composite {
         }
             
 		else {
-			//genesLabel.setHTML("<b>Genes:</b> <font color=\"red\">"+selectedGenes.get(0).getSymbol()+"</font>");
             genesCheck[0] = new CheckBox(selectedGenes.get(0).getSymbol());
             genesCheck[0].setValue(false);
             genesPanel.add(genesCheck[0]);
@@ -96,14 +95,12 @@ public class GeneView extends Composite {
 				if (selectedGenes.get(i).getSymbol().equals(genesAvailable[j]))
 					found = true;
 			if (found) {
-                //genesLabel.setHTML(genesLabel.getHTML()+" "+selectedGenes.get(i).getSymbol());
                 genesCheck[i] = new CheckBox(selectedGenes.get(i).getSymbol());
                 genesCheck[i].setValue(true);
                 genesPanel.add(genesCheck[i]);
                 selectedGenes.get(i).setAvailable(true);
             }
             else {
-                //genesLabel.setHTML(genesLabel.getHTML()+"<font color=\"red\">"+" "+selectedGenes.get(i).getSymbol()+"</font>");
                 genesCheck[i] = new CheckBox(selectedGenes.get(i).getSymbol());
                 genesCheck[i].setEnabled(false);
                 genesCheck[i].setStyleName("disabled");
@@ -137,9 +134,6 @@ public class GeneView extends Composite {
         			if (fv.getSYNCValue()){
         				if(fv.getType() == 'S'){
         					fv.updateFlexTable();
-        				}
-        				else{
-        					// TODO ?
         				}
         			}
         		}

@@ -7,7 +7,6 @@ import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
 import biomatec.javaBeans.SelectedGenesData;
-import biomatec.server.HTTPRequest;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -52,7 +51,6 @@ public class GeneSearch implements EntryPoint{
 	private FlexTable genesTable = new FlexTable();
 	private FlexTable datasetsTable = new FlexTable();
 	private TextBox searchTextBox = new TextBox();
-	//private SuggestBox searchSuggestBox;
 	private ListBox searchListBox = new ListBox();
 	private Button searchButton = new Button("Search");
 	private Button submitSelectionButton = new Button("Submit Selection");
@@ -110,14 +108,9 @@ public class GeneSearch implements EntryPoint{
 		// Assemble the search ListBox
 		searchListBox.addItem("Gene");
 
-		// Assemble the search suggest box
-		//GeneSuggestOracle oracle = new GeneSuggestOracle();
-		//searchSuggestBox = new SuggestBox(oracle);
-		
 		// Assemble the search panel
 		searchPanel.setVerticalAlignment(HasAlignment.ALIGN_MIDDLE);
 		searchPanel.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
-		//searchPanel.add(searchSuggestBox);
 		searchPanel.add(searchTextBox);
 		searchPanel.add(searchListBox);
 		searchPanel.add(searchButton);
@@ -310,7 +303,6 @@ public class GeneSearch implements EntryPoint{
 			geneSearchSvc.getData(endpoint, requestParameters, callbackD);
 			geneSearchSvc.columnsType(dataset.getDatasetKey(), callbackCT);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

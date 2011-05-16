@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import biomatec.javaBeans.Dataset;
 import biomatec.javaBeans.Function;
 import biomatec.javaBeans.Gene;
-import biomatec.javaBeans.Double;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.FormPanel;
 
 /**
  * The async counterpart of <code>GeneSearchService</code>.
